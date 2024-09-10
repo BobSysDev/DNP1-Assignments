@@ -38,11 +38,35 @@ public class PostInMemoryRepository : IPostRepository
     public Task<Post> GetSingleAsync(int postId)
     {
         var post = posts.FirstOrDefault(p => p.PostId == postId);
+        if (post is null) throw new InvalidOperationException($"Comment with ID '{postId}' not found");
         return Task.FromResult(post);
     }
 
     public IQueryable<Post> GetMany()
     {
         return posts.AsQueryable();
+    }
+    
+    public Task LikePostAsync(int id)
+    {
+        var postToLike = posts.SingleOrDefault(c => c.PostId == id);
+        if (postToLike is null) throw new InvalidOperationException($"Post with ID '{id}' not found");
+
+        postToLike.Likes++;
+
+        return Task.CompletedTask;
+    }
+    
+    public Task RemoveLikePostAsync(int id)
+    {
+        var postToLike = posts.SingleOrDefault(c => c.PostId == id);
+        if (postToLike is null) throw new InvalidOperationException($"Post with ID '{id}' not found");
+
+        if (postToLike.Likes > 0)
+        {
+            postToLike.Likes--;
+        }
+
+        return Task.CompletedTask;
     }
 }
