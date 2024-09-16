@@ -61,4 +61,17 @@ public class CommentInMemoryRepository : ICommentRepository
 
         return Task.CompletedTask;
     }
+    
+    public Task RemoveLikeCommentAsync(int id)
+    {
+        var commentToLike = comments.SingleOrDefault(c => c.Id == id);
+        if (commentToLike is null) throw new InvalidOperationException($"Comment with ID '{id}' not found");
+
+        if (commentToLike.Likes > 0)
+        {
+            commentToLike.Likes--;
+        }
+
+        return Task.CompletedTask;
+    }
 }
