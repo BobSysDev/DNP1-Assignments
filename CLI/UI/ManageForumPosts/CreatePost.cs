@@ -23,5 +23,7 @@ public class CreatePost
         var newPost = new Post (title, body, "",1 );
         await _postRepository.AddAsync(newPost);
         Console.WriteLine("Post created successfully!");
+        Console.WriteLine($"Title: {newPost.Title}");
+        Console.WriteLine($"Content: {newPost.Body}");
     }
 }

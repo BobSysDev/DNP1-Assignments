@@ -25,7 +25,7 @@ public class ListPosts
         Console.WriteLine("List of posts:");
         foreach (var post in posts)
         {
-            Console.WriteLine($"Post ID: {post.PostId}, Title: {post.Title}, Likes: {post.Likes}");
+            Console.WriteLine($"Post ID: {post.PostId}, Title: {post.Title}, Content: {post.Body}, Likes: {post.Likes}");
         }
     }
     
