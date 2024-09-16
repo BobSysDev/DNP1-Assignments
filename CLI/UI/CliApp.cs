@@ -70,4 +70,12 @@ public class CliApp
         var deletePost = new ManageForumPosts.DeletePost(_postRepository);
         await deletePost.DeleteForumPost();
     }
+    
+    private async Task CreateUserAsync()
+    {
+        var createUser = new ManageForumUsers.CreateUser(_userRepository);
+        await createUser.CreateForumUser();
+    }
 }
+
+
