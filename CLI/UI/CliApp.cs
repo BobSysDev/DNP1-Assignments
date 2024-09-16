@@ -16,17 +16,24 @@ public class CliApp
         _postRepository = postRepository;
     }
     
-    public async Task ShowMenuAsync()
+    public async Task StartAsync()
+    {
+        Console.WriteLine("CLI App Started");
+        await ShowMenuAsync();
+    }
+    
+    private async Task ShowMenuAsync()
     {
         while (true)
         {
-            Console.WriteLine("1. Register");
-            Console.WriteLine("2. Login");
-            Console.WriteLine("3. Exit");
-            Console.Write("Choose an option: ");
-            var option = Console.ReadLine();
-            
-            switch (option)
+            Console.WriteLine("1. Create Post");
+            Console.WriteLine("2. View Posts");
+            Console.WriteLine("3. Delete Post");
+            Console.WriteLine("4. Exit");
+            Console.Write("Select an option: ");
+            var choice = Console.ReadLine();
+
+            switch (choice)
             {
                 case "1":
                     await CreatePostAsync();
@@ -35,6 +42,9 @@ public class CliApp
                     ViewPosts();
                     break;
                 case "3":
+                    await DeletePostAsync();
+                    break;
+                case "4":
                     return;
                 default:
                     Console.WriteLine("Invalid option. Please try again.");
@@ -45,23 +55,21 @@ public class CliApp
     
     private async Task CreatePostAsync()
     {
-        Console.Write("Enter post title: ");
-        string title = Console.ReadLine();
-        Console.Write("Enter post content: ");
-        string content = Console.ReadLine();
-        var post = new Post(title, content, _postRepository.GetSingleAsync(1).Result.PostId + 1, 1);
-        await _postRepository.AddAsync(post);
-        Console.WriteLine($"Post Created Successfully");
+        var createPost = new ManageForumPosts.CreatePost(_postRepository);
+        await createPost.CreateForumPost();
     }
-    
+
     private void ViewPosts()
     {
-        var posts = _postRepository.GetMany();
-        foreach (var post in posts)
-        {
-            Console.WriteLine($"ID: {post.PostId}, Title: {post.Title}, Body: {post.Body}");
-        }
+        var listPosts = new ManageForumPosts.ListPosts(_postRepository);
+        listPosts.DisplayPosts();
     }
-    
+
+    private async Task DeletePostAsync()
+    {
+        var deletePost = new ManageForumPosts.DeletePost(_postRepository);
+        await deletePost.DeleteForumPost();
+    }
 }
+
 
