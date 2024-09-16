@@ -1,0 +1,166 @@
+﻿using Entities;
+using RepositoryContracts;
+
+namespace CLI.UI.ManagePostComments;
+
+public class ReadComment
+{
+    private ICommentRepository _commentRepository;
+    private IUserRepository _userRepository;
+    private int _meAuthor;
+    
+    public ReadComment(ICommentRepository commentRepository, IUserRepository userRepository, int meAuthor)
+    {
+        _commentRepository = commentRepository;
+        _userRepository = userRepository;
+        _meAuthor = meAuthor;
+    }
+    
+    public async Task ViewComment(string commentId)
+    {
+        var comment = await _commentRepository.GetSingleAsync(commentId);
+        var author = await _userRepository.GetSingleAsync(comment.UserId);
+        
+        Console.WriteLine($"==== [ {comment.Id} ] ========== [ Comment by {author} ] ========== [ {comment.Likes} ] ====");
+        Console.WriteLine(comment.Body);
+    }
+
+    public async Task ViewManyComments(string parentId)
+    {
+        var comments = _commentRepository.GetManyAsync();
+        
+        foreach (var comment in comments)
+        {
+            if (comment.ParentId == parentId)
+            {
+                await ViewComment(parentId);
+            }
+        }
+        
+        while (true)
+        {
+            Console.WriteLine("C: create a new comment under this entity \n" +
+                              "R: read child comments\n" +
+                              "U: update an existing comment\n" +
+                              "D: delete an existing comment\n" +
+                              "L: like a comment\n" +
+                              "E: go back");
+            var input = Console.ReadLine();
+            string? temporaryId = null;
+            switch (input)
+            {
+                case "C":
+                    var createComment = new CreateComment(_commentRepository, _meAuthor);
+                    await createComment.CreateForumComment(parentId);
+                    break;
+                case "R":
+                    while (true)
+                    {
+                        Console.WriteLine("Which comment's children would you like to view? ");
+                        Console.Write("Provide comment ID (in first square brackets): ");
+                        temporaryId = Console.ReadLine();
+                        
+                        if (temporaryId is null)
+                        {
+                            throw new InvalidOperationException(
+                                "No idea how did you manage to input null from keyboard");
+                        }
+                        
+                        try
+                        {
+                            await _commentRepository.GetSingleAsync(temporaryId);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Please, try again...");
+                        }
+                    }
+                    await ViewManyComments(temporaryId);
+                    break;
+                case "U":
+                    while (true)
+                    {
+                        Console.WriteLine("Which comment would you like to update? ");
+                        Console.Write("Provide comment ID (in first square brackets): ");
+                        temporaryId = Console.ReadLine();
+                        
+                        if (temporaryId is null)
+                        {
+                            throw new InvalidOperationException(
+                                "No idea how did you manage to input null from keyboard");
+                        }
+                        
+                        try
+                        {
+                            await _commentRepository.GetSingleAsync(temporaryId);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Please, try again...");
+                        }
+                    }
+                    //Update the comment
+                    break;
+                case "D":
+                    while (true)
+                    {
+                        Console.WriteLine("Which comment would you like to delete? ");
+                        Console.Write("Provide comment ID (in first square brackets): ");
+                        temporaryId = Console.ReadLine();
+                        
+                        if (temporaryId is null)
+                        {
+                            throw new InvalidOperationException(
+                                "No idea how did you manage to input null from keyboard");
+                        }
+                        
+                        try
+                        {
+                            await _commentRepository.GetSingleAsync(temporaryId);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Please, try again...");
+                        }
+                    }
+                    //Delete the comment
+                    break;
+                case "L": 
+                    while (true)
+                    {
+                        Console.WriteLine("Which comment would you like to like?");
+                        Console.Write("Provide comment ID (in first square brackets): ");
+                        temporaryId = Console.ReadLine();
+                        
+                        if (temporaryId is null)
+                        {
+                            throw new InvalidOperationException(
+                                "No idea how did you manage to input null from keyboard");
+                        }
+                        
+                        try
+                        {
+                            await _commentRepository.GetSingleAsync(temporaryId);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Please, try again...");
+                        }
+                    }
+                    
+                    await _commentRepository.LikeCommentAsync(temporaryId);
+                    break;
+                case "E":
+                    return;
+            }
+        }
+    }
+}
