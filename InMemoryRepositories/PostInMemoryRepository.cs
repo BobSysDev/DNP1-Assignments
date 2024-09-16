@@ -9,7 +9,15 @@ public class PostInMemoryRepository : IPostRepository
 
     public Task<Post> AddAsync(Post post)
     {
-        post.PostId = posts.Any() ? posts.Max(p => p.PostId) + 1 : 1;
+        if (posts.Any())
+        {
+            var result = posts.Max(p => Int32.Parse(p.PostId.Substring(1, p.PostId.Length - 1))) + 1;
+            post.PostId = "P" + result;
+        }
+        else
+        {
+            post.PostId = "P1";
+        }
         posts.Add(post);
         return Task.FromResult(post);
     }
@@ -25,7 +33,7 @@ public class PostInMemoryRepository : IPostRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int postId)
+    public Task DeleteAsync(string postId)
     {
         Post? postToRemove = posts.SingleOrDefault(p => p.PostId == postId);
 
@@ -35,7 +43,7 @@ public class PostInMemoryRepository : IPostRepository
         return Task.CompletedTask;
     }
 
-    public Task<Post> GetSingleAsync(int postId)
+    public Task<Post> GetSingleAsync(string postId)
     {
         var post = posts.FirstOrDefault(p => p.PostId == postId);
         if (post is null) throw new InvalidOperationException($"Comment with ID '{postId}' not found");
@@ -47,7 +55,7 @@ public class PostInMemoryRepository : IPostRepository
         return posts.AsQueryable();
     }
     
-    public Task LikePostAsync(int id)
+    public Task LikePostAsync(string id)
     {
         var postToLike = posts.SingleOrDefault(c => c.PostId == id);
         if (postToLike is null) throw new InvalidOperationException($"Post with ID '{id}' not found");
@@ -57,7 +65,7 @@ public class PostInMemoryRepository : IPostRepository
         return Task.CompletedTask;
     }
     
-    public Task RemoveLikePostAsync(int id)
+    public Task RemoveLikePostAsync(string id)
     {
         var postToLike = posts.SingleOrDefault(c => c.PostId == id);
         if (postToLike is null) throw new InvalidOperationException($"Post with ID '{id}' not found");

@@ -2,7 +2,7 @@
 
 public class Post
 {
-    public Post(string title, string body, int postId, int userId)
+    public Post(string title, string body, string postId, int userId)
     {
         Title = title;
         Body = body;
@@ -13,7 +13,7 @@ public class Post
 
     public string Title { get; set; }
     public string Body { get; set; }
-    public int PostId { get; set; }
+    public string PostId { get; set; }
     public int UserId { get; set; }
     public int Likes { get; set; }
 

@@ -13,9 +13,15 @@ public class CommentInMemoryRepository : ICommentRepository
 
     public Task<Comment> AddAsync(Comment comment)
     {
-        comment.Id = comments.Any()
-            ? comments.Max(c => c.Id) + 1
-            : 1;
+        if (comments.Any())
+        {
+            var result = comments.Max(c => Int32.Parse(c.Id.Substring(1, c.Id.Length - 1))) + 1;
+            comment.Id = "C" + result;
+        }
+        else
+        {
+            comment.Id = "C1";
+        }
         comments.Add(comment);
         return Task.FromResult(comment);
     }
@@ -30,7 +36,7 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.CompletedTask;
     }
 
-    public Task DeleteAsync(int id)
+    public Task DeleteAsync(string id)
     {
         var commentToRemove = comments.SingleOrDefault(c => c.Id == id);
         if (commentToRemove is null) throw new InvalidOperationException($"Comment with ID '{id}' not found");
@@ -39,7 +45,7 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.CompletedTask;
     }
 
-    public Task<Comment> GetSingleAsync(int id)
+    public Task<Comment> GetSingleAsync(string id)
     {
         var commentToRetrieve = comments.SingleOrDefault(c => c.Id == id);
         if (commentToRetrieve is null) throw new InvalidOperationException($"Comment with ID '{id}' not found");
@@ -52,7 +58,7 @@ public class CommentInMemoryRepository : ICommentRepository
         return comments.AsQueryable();
     }
 
-    public Task LikeCommentAsync(int id)
+    public Task LikeCommentAsync(string id)
     {
         var commentToLike = comments.SingleOrDefault(c => c.Id == id);
         if (commentToLike is null) throw new InvalidOperationException($"Comment with ID '{id}' not found");
@@ -62,7 +68,7 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.CompletedTask;
     }
     
-    public Task RemoveLikeCommentAsync(int id)
+    public Task RemoveLikeCommentAsync(string id)
     {
         var commentToLike = comments.SingleOrDefault(c => c.Id == id);
         if (commentToLike is null) throw new InvalidOperationException($"Comment with ID '{id}' not found");
