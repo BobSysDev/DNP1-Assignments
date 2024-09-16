@@ -71,5 +71,3 @@ public class CliApp
         await deletePost.DeleteForumPost();
     }
 }
-
-
