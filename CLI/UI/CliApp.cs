@@ -1,4 +1,5 @@
-﻿using RepositoryContracts;
+﻿using CLI.UI.ManagePostComments;
+using RepositoryContracts;
 
 namespace CLI.UI;
 
@@ -29,10 +30,11 @@ public class CliApp
             Console.WriteLine("1. Create Post");
             Console.WriteLine("2. View Posts");
             Console.WriteLine("3. Delete Post");
-            // Console.WriteLine("4. Manage Posts");
+            Console.WriteLine("4. Manage Posts");
             // Console.WriteLine("5. Like Post");
-            // Console.WriteLine("6. Dislike Post");
-            Console.WriteLine("7. Exit");
+            // Console.WriteLine("6. Dislike Post");1
+            Console.WriteLine("7. Read Comments");
+            Console.WriteLine("8. Exit");
             var choice = Console.ReadLine();
 
             switch (choice)
@@ -56,6 +58,9 @@ public class CliApp
                 //     await RemoveLikePostAsync();
                 //     break;
                 case "7":
+                    await ReadCommentsAsync();
+                    break;
+                case "8":
                     Console.WriteLine("Exiting CLI App");
                     return;
                 default:
@@ -100,6 +105,27 @@ public class CliApp
     //     var removeLikePost = new ManageForumPosts.RemoveLikePost(_postRepository);
     //     await removeLikePost.RemoveLikePost();
     // }
+    
+    private async Task ReadCommentsAsync()
+    { 
+        Console.WriteLine("Enter the Post ID to view comments:");
+        var postId = Console.ReadLine();    
+        if (postId == null)
+        {
+            Console.WriteLine("Post ID cannot be empty.");
+            return;
+        }
+
+        var post = await _postRepository.GetSingleAsync(postId);
+        if (post == null)
+        {
+            Console.WriteLine($"Post with ID {postId} not found.");
+            return;
+        }
+
+        var commentReader = new ReadComment(_commentRepository, _userRepository, 69);
+        await commentReader.ViewForumComments(postId);
+    }
 }
 
 

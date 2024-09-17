@@ -37,7 +37,7 @@ public class ReadComment
             {
                 if (comment.ParentId == parentId)
                 {
-                    await ViewComment(parentId);
+                    await ViewComment(comment.Id);
                 }
             }
         
