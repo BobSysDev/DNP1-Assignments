@@ -2,7 +2,7 @@
 
 public class Comment
 {
-    public Comment(string id, int userId, int parentId, string body)
+    public Comment(string id, int userId, string parentId, string body)
     {
         Id = id;
         UserId = userId;
@@ -13,7 +13,7 @@ public class Comment
 
     public string Id { get; set; }
     public int UserId { get; set; }
-    public int ParentId { get; set; }
+    public string ParentId { get; set; }
     public string Body { get; set; }
     public int Likes { get; set; }
 }
