@@ -18,11 +18,11 @@ public class ListPosts
         
         if (!posts.Any())
         {
-            Console.WriteLine("No posts available.");
+            Console.WriteLine("- No posts available. -");
             return;
         }
         
-        Console.WriteLine("List of posts:");
+        Console.WriteLine("- List of posts: -");
         foreach (var post in posts)
         {
             Console.WriteLine($"Post ID: {post.PostId}, Title: {post.Title}, Content: {post.Body}, Likes: {post.Likes}");
@@ -39,9 +39,9 @@ public class ListPosts
             return;
         }
 
-        Console.WriteLine($"Post ID: {post.PostId}");
-        Console.WriteLine($"Title: {post.Title}");
-        Console.WriteLine($"Content: {post.Body}");
-        Console.WriteLine($"Likes: {post.Likes}");
+        Console.WriteLine($"+ Post ID: {post.PostId}");
+        Console.WriteLine($"+ Title: {post.Title}");
+        Console.WriteLine($"+ Content: {post.Body}");
+        Console.WriteLine($"+ Likes: {post.Likes}");
     }
 }

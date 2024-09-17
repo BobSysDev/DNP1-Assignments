@@ -13,14 +13,14 @@ public class ManagePost
     
     public async Task ManagePosts()
     {
-        Console.WriteLine("Choose an option:");
-        Console.WriteLine("1. Create a new post");
-        Console.WriteLine("2. Delete a post");
-        Console.WriteLine("3. List all posts");
-        Console.WriteLine("4. View a single post");
-        Console.WriteLine("5. Like a post");
-        Console.WriteLine("6. Dislike a post");
-        Console.WriteLine("7. Update existing post");
+        Console.WriteLine("====== Choose an option: ======");
+        Console.WriteLine("== 1. Create a new post ==");
+        Console.WriteLine("== 2. Delete a post ==");
+        Console.WriteLine("== 3. List all posts ==");
+        Console.WriteLine("== 4. View a single post ==");
+        Console.WriteLine("== 5. Like a post ==");
+        Console.WriteLine("== 6. Dislike a post ==");
+        Console.WriteLine("== 7. Update existing post ==");
         
         var choice = Console.ReadLine();
     
@@ -39,31 +39,31 @@ public class ManagePost
                 listPosts.DisplayPosts();
                 break;
             case "4":
-                Console.WriteLine("Enter the Post ID to view:");
+                Console.WriteLine("|Enter the Post ID to view:|");
                 var postId = Console.ReadLine();
                 var listSinglePost = new ListPosts(_postRepository);
                 listSinglePost.DisplayPostById(postId);
                 break;
             case "5":
-                Console.WriteLine("Enter the Post ID to like:");
+                Console.WriteLine("|Enter the Post ID to like:|");
                 var postToLikeId = Console.ReadLine();
                 await _postRepository.LikePostAsync(postToLikeId);
-                Console.WriteLine($"Post {postToLikeId} has been liked.");
+                Console.WriteLine($"|Post {postToLikeId} has been liked.|");
                 break;
             case "6":
-                Console.WriteLine("Enter the Post ID to dislike:");
+                Console.WriteLine("|Enter the Post ID to dislike:|");
                 var postToDislikeId = Console.ReadLine();
                 await _postRepository.RemoveLikePostAsync(postToDislikeId);
-                Console.WriteLine($"Post {postToDislikeId} has been disliked.");
+                Console.WriteLine($"|Post {postToDislikeId} has been disliked.|");
                 break;
             case "7":
-                Console.WriteLine("Enter the Post ID to update:");
+                Console.WriteLine("|Enter the Post ID to update:|");
                 var postToUpdateId = Console.ReadLine();
                 var postToUpdate = await _postRepository.GetSingleAsync(postToUpdateId);
                 await _postRepository.UpdateAsync(postToUpdate);
                 break;
             default:
-                Console.WriteLine("Invalid choice.");
+                Console.WriteLine("|Invalid choice.|");
                 break;
         }
     }

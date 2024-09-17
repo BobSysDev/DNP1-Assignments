@@ -18,17 +18,17 @@ public class DeletePost
         
         if (!posts.Any())
         {
-            Console.WriteLine("No posts available to delete.");
+            Console.WriteLine("- No posts available to delete. -");
             return;
         }
         
-        Console.WriteLine("Available posts:");
+        Console.WriteLine("- Available posts: -");
         foreach (var post in posts)
         {
             Console.WriteLine($"Post ID: {post.PostId}, Title: {post.Title}");
         }
         
-        Console.WriteLine("Enter the Post ID to delete:");
+        Console.WriteLine("- Enter the Post ID to delete: -");
         var postIdInput = Console.ReadLine();
         
         var postToDelete = posts.FirstOrDefault(p => p.PostId == postIdInput);
@@ -38,17 +38,17 @@ public class DeletePost
             return;
         }
         
-        Console.WriteLine($"Are you sure you want to delete the post titled '{postToDelete.Title}'? (yes/no)");
+        Console.WriteLine($"- Are you sure you want to delete the post titled '{postToDelete.Title}'? (yes/no) -");
         var confirmation = Console.ReadLine();
 
         if (confirmation?.ToLower() == "yes")
         {
             await _postRepository.DeleteAsync(postIdInput);
-            Console.WriteLine($"Post with ID {postIdInput} deleted successfully!");
+            Console.WriteLine($"- Post with ID {postIdInput} deleted successfully! -");
         }
         else
         {
-            Console.WriteLine("Post deletion canceled.");
+            Console.WriteLine("- Post deletion canceled. -");
         }
         
     }
