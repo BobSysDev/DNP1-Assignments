@@ -12,7 +12,7 @@ public class ListUser
         _userRepository = userRepository;
     }
     
-    public void DisplayUsers()
+    public void DisplayForumUsers()
     {
       
         var users = _userRepository.GetMany().ToList();

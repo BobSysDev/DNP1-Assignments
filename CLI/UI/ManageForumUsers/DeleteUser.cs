@@ -29,8 +29,13 @@ public class DeleteUser
         
         Console.WriteLine("Enter the user ID to delete:");
         var userIdInput = Console.ReadLine();
+        if (userIdInput is null)
+        {
+            Console.WriteLine("Invalid input.");
+        }
+        int userId= int.Parse(userIdInput);
         
-        var userToDelete = users.FirstOrDefault(u => u.Id.Equals(userIdInput) );
+        var userToDelete = users.FirstOrDefault(u => u.Id == userId);
         if (userToDelete == null)
         {
             Console.WriteLine($"User with ID {userIdInput} not found.");
@@ -42,8 +47,8 @@ public class DeleteUser
 
         if (confirmation?.ToLower() == "yes")
         {
-            await _userRepository.DeleteAsync(userIdInput);
-            Console.WriteLine($"User {userIdInput} deleted successfully!");
+            await _userRepository.DeleteAsync(userId);
+            Console.WriteLine($"User {userId} deleted successfully!");
         }
         else
         {
