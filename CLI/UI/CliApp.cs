@@ -1,5 +1,4 @@
-﻿using Entities;
-using RepositoryContracts;
+﻿using RepositoryContracts;
 
 namespace CLI.UI;
 

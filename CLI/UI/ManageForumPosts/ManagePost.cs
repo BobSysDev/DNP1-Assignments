@@ -32,6 +32,12 @@ public class ManagePost
                 var listPosts = new ListPosts(_postRepository);
                 listPosts.DisplayPosts();
                 break;
+            case "4":
+                Console.WriteLine("Enter the Post ID to view:");
+                var postId = Console.ReadLine();
+                var listSinglePost = new ListPosts(_postRepository);
+                listSinglePost.DisplayPostById(postId);
+                break;
             default:
                 Console.WriteLine("Invalid choice.");
                 break;
