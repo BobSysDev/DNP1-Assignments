@@ -13,9 +13,9 @@ public class ManageUser
     }
     public async Task ManageForumUser()
     {
-        Console.WriteLine("1. Create a new post");
-        Console.WriteLine("2. Delete a post");
-        Console.WriteLine("3. List all posts");
+        Console.WriteLine("1. Create a user");
+        Console.WriteLine("2. Delete a user");
+        Console.WriteLine("3. List all users");
         var choice = Console.ReadLine();
     
         switch (choice)

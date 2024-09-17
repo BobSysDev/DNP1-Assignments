@@ -32,9 +32,12 @@ public class CliApp
             Console.WriteLine("3. Delete Post");
             Console.WriteLine("4. Manage Posts");
             // Console.WriteLine("5. Like Post");
-            // Console.WriteLine("6. Dislike Post");1
-            Console.WriteLine("7. Read Comments");
-            Console.WriteLine("8. Exit");
+            // Console.WriteLine("6. Dislike Post");
+            Console.WriteLine("5. Add a user");
+            Console.WriteLine("6. Delete a User");
+            Console.WriteLine("7. Manage a User");
+            Console.WriteLine("8. Read Comments");
+            Console.WriteLine("9. Exit");
             var choice = Console.ReadLine();
 
             switch (choice)
@@ -51,16 +54,19 @@ public class CliApp
                 case "4":
                     await ManagePostsAsync();
                     break;
-                // case "5":
-                //     await LikePostAsync();
-                //     break;
-                // case "6":
-                //     await RemoveLikePostAsync();
-                //     break;
+                case "5":
+                    await CreateUserAsync();
+                    break;
+                case "6":
+                    await DeleteUserAsync();
+                    break;
                 case "7":
+                    await ManageUserAsync();
+                    break;  
+                case "8":
                     await ReadCommentsAsync();
                     break;
-                case "8":
+                case "9":
                     Console.WriteLine("Exiting CLI App");
                     return;
                 default:
@@ -126,6 +132,26 @@ public class CliApp
         var commentReader = new ReadComment(_commentRepository, _userRepository, 69);
         await commentReader.ViewForumComments(postId);
     }
+    
+    private async Task CreateUserAsync()
+    {
+        var createUser = new ManageForumUsers.CreateUser(_userRepository);
+        await createUser.CreateForumUser();
+    }
+    
+    private async Task DeleteUserAsync()
+    {
+        var deleteUser = new ManageForumUsers.DeleteUser(_userRepository);
+        await deleteUser.DeleteForumUser();
+    }
+    
+    private async Task ManageUserAsync()
+    {
+        var manageUser = new ManageForumUsers.ManageUser(_userRepository);
+        await manageUser.ManageForumUser();
 }
+    }
+
+
 
 
