@@ -16,7 +16,7 @@ public class ReadComment
         _meAuthor = meAuthor;
     }
     
-    public async Task ViewComment(string commentId)
+    private async Task ViewComment(string commentId)
     {
         var comment = await _commentRepository.GetSingleAsync(commentId);
         var author = await _userRepository.GetSingleAsync(comment.UserId);
@@ -25,25 +25,42 @@ public class ReadComment
         Console.WriteLine(comment.Body);
     }
 
-    public async Task ViewManyComments(string parentId)
+    public async Task ViewForumComments(string parentId)
     {
         var comments = _commentRepository.GetManyAsync();
+
+        var commentsAvailable = comments.Any();
         
-        foreach (var comment in comments)
+        if (commentsAvailable)
         {
-            if (comment.ParentId == parentId)
+            foreach (var comment in comments)
             {
-                await ViewComment(parentId);
+                if (comment.ParentId == parentId)
+                {
+                    await ViewComment(parentId);
+                }
             }
+        
+            Console.WriteLine($"All comments under [ {parentId} ] have been displayed. \n" +
+                              $"More actions available: ");
         }
+        else
+        {
+            Console.WriteLine($"No comments available under [ {parentId} ] \n" +
+                              $"More actions available: ");
+        }
+        
+        
         
         while (true)
         {
             Console.WriteLine("C: create a new comment under this entity \n" +
-                              "R: read child comments\n" +
-                              "U: update an existing comment\n" +
-                              "D: delete an existing comment\n" +
-                              "L: like a comment\n" +
+                              (commentsAvailable?
+                                    "R: read child comments\n" +
+                                    "U: update an existing comment\n" +
+                                    "D: delete an existing comment\n" +
+                                    "L: like a comment\n" +
+                                    "DL: dislike a comment\n" : "") +
                               "E: go back");
             var input = Console.ReadLine();
             string? temporaryId = null;
@@ -77,7 +94,7 @@ public class ReadComment
                             Console.WriteLine("Please, try again...");
                         }
                     }
-                    await ViewManyComments(temporaryId);
+                    await ViewForumComments(temporaryId);
                     break;
                 case "U":
                     while (true)
@@ -103,7 +120,9 @@ public class ReadComment
                             Console.WriteLine("Please, try again...");
                         }
                     }
-                    //Update the comment
+
+                    var commentUpdater = new UpdateComment(_commentRepository);
+                    await commentUpdater.UpdateForumComment(temporaryId);
                     break;
                 case "D":
                     while (true)
@@ -129,7 +148,10 @@ public class ReadComment
                             Console.WriteLine("Please, try again...");
                         }
                     }
-                    //Delete the comment
+
+                    var commentDeleter = new DeleteComment(_commentRepository);
+                    await commentDeleter.DeleteForumComment(temporaryId);
+                    
                     break;
                 case "L": 
                     while (true)
@@ -158,8 +180,38 @@ public class ReadComment
                     
                     await _commentRepository.LikeCommentAsync(temporaryId);
                     break;
+                case "DL": 
+                    while (true)
+                    {
+                        Console.WriteLine("Which comment would you like to like?");
+                        Console.Write("Provide comment ID (in first square brackets): ");
+                        temporaryId = Console.ReadLine();
+                        
+                        if (temporaryId is null)
+                        {
+                            throw new InvalidOperationException(
+                                "No idea how did you manage to input null from keyboard");
+                        }
+                        
+                        try
+                        {
+                            await _commentRepository.GetSingleAsync(temporaryId);
+                            break;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            Console.WriteLine("Please, try again...");
+                        }
+                    }
+
+                    await _commentRepository.RemoveLikeCommentAsync(temporaryId);
+                    break;
                 case "E":
                     return;
+                default:
+                    Console.WriteLine("Command not recognized, please, try again...");
+                    break;
             }
         }
     }
