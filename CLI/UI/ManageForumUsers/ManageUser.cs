@@ -28,7 +28,11 @@ public class ManageUser
                 var deleteUser = new DeleteUser(_userRepository);
                 await deleteUser.DeleteForumUser();
                 break;
-            case "3":
+            case "3" :
+                var updateUser = new UpdateUser(_userRepository);
+                await updateUser.UpdateForumUser();
+                break;
+            case "4":
                 var listUser = new ListUser(_userRepository);
                 listUser.DisplayForumUsers();
                 break;
