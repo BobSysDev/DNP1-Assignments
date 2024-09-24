@@ -12,7 +12,7 @@ public class PostFileRepository : IPostRepository
     {
         if (!File.Exists(filePath))
         {
-            File.Create(filePath).Close();
+            File.WriteAllText(filePath, "[]");
         }
     }
     
@@ -127,7 +127,5 @@ public class PostFileRepository : IPostRepository
             post.Likes--;
             await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(posts));
         }
-        
-        
     }
 }
