@@ -19,39 +19,115 @@ public class PostFileRepository : IPostRepository
     
     public async Task<Post> AddAsync(Post post)
     {
-        string postsAsJson = await File.ReadAllTextAsync(filePath);
-        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postsAsJson);
-        String maxId = posts.Count > 0 ? posts.Max(p => p.PostId) + 1 : 1;
-        post.PostId = maxId;
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        
+        if (posts == null)
+        {
+            throw new InvalidDataException("Deserializing posts failed");
+        }
+
+        if (posts.Any())
+        {
+            var resultPosts = posts.Max(p => Int32.Parse(p.PostId.Substring(1, p.PostId.Length - 1))) + 1;
+            post.PostId = "P" + resultPosts;
+        }
+        else
+        {
+            post.PostId = "P1";
+        }
+        
+        posts.Add(post);
+        postAsJson = JsonSerializer.Serialize(posts, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        await File.WriteAllTextAsync(filePath, postAsJson);
+        return post;
     }
 
-    public Task UpdateAsync(Post post)
+    public async Task UpdateAsync(Post post)
     {
-        throw new NotImplementedException();
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        
+        if (posts == null)
+        {
+            throw new InvalidDataException("Deserializing posts failed");
+        }
+        
+        var existingPost = posts.FirstOrDefault(p => p.PostId == post.PostId);
+        if (existingPost != null)
+        {
+            posts.Remove(existingPost);
+            posts.Add(post);
+            postAsJson = JsonSerializer.Serialize(posts, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+            await File.WriteAllTextAsync(filePath, postAsJson);
+        }
     }
 
-    public Task DeleteAsync(string postId)
+    public async Task DeleteAsync(string postId)
     {
-        throw new NotImplementedException();
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        
+        if (posts == null)
+        {
+            throw new InvalidDataException("Deserializing posts failed");
+        }
+        
+        var existingPost = posts.FirstOrDefault(p => p.PostId == postId);
+        if (existingPost != null)
+        {
+            posts.Remove(existingPost);
+            postAsJson = JsonSerializer.Serialize(posts, new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+        }
+        await File.WriteAllTextAsync(filePath, postAsJson);
     }
 
-    public Task<Post> GetSingleAsync(string postId)
+    public async Task<Post> GetSingleAsync(string postId)
     {
-        throw new NotImplementedException();
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        return posts.FirstOrDefault(p => p.PostId == postId);
     }
 
     public IQueryable<Post> GetMany()
     {
-        throw new NotImplementedException();
+        var postAsJson = File.ReadAllTextAsync(filePath).Result;
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        return posts.AsQueryable();
     }
 
-    public Task LikePostAsync(string id)
+    public async Task LikePostAsync(string id)
     {
-        throw new NotImplementedException();
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        var post = posts.FirstOrDefault(p => p.PostId == id);
+        if (posts != null)
+        {
+            post.Likes++;
+            await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(posts));
+        }
     }
 
-    public Task RemoveLikePostAsync(string id)
+    public async Task RemoveLikePostAsync(string id)
     {
-        throw new NotImplementedException();
+        var postAsJson = await File.ReadAllTextAsync(filePath);
+        List<Post> posts = JsonSerializer.Deserialize<List<Post>>(postAsJson);
+        var post = posts.FirstOrDefault(p => p.PostId == id);
+        if (posts != null)
+        {
+            post.Likes--;
+            await File.WriteAllTextAsync(filePath, JsonSerializer.Serialize(posts));
+        }
+        
+        
     }
 }
