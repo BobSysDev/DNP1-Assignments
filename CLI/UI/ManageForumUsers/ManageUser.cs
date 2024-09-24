@@ -15,7 +15,8 @@ public class ManageUser
     {
         Console.WriteLine("1. Create a user");
         Console.WriteLine("2. Delete a user");
-        Console.WriteLine("3. List all users");
+        Console.WriteLine("3. Update a user");
+        Console.WriteLine("4. List all users");
         var choice = Console.ReadLine();
     
         switch (choice)
@@ -28,7 +29,17 @@ public class ManageUser
                 var deleteUser = new DeleteUser(_userRepository);
                 await deleteUser.DeleteForumUser();
                 break;
-            case "3":
+            case "3" :
+                Console.WriteLine("|Enter the User ID to update:|");
+                var userToUpdateId = Console.ReadLine();
+                var updateUser = new UpdateUser(_userRepository);
+                if (userToUpdateId == null)
+                {
+                    throw new Exception($"User {userToUpdateId} not found");
+                }
+                await updateUser.UpdateForumUser(Int32.Parse(userToUpdateId));
+                break;
+            case "4":
                 var listUser = new ListUser(_userRepository);
                 listUser.DisplayForumUsers();
                 break;
