@@ -5,8 +5,8 @@ using RepositoryContracts;
 
 Console.WriteLine("Starting CLI app...");
 IUserRepository userRepository = new UserInMemoryRepository();
+IPostRepository postRepository = new PostFileRepository();
 ICommentRepository commentRepository = new CommentFileRepository();
-IPostRepository postRepository = new PostInMemoryRepository();
 
 CliApp cliApp = new CliApp(userRepository, commentRepository, postRepository);
 await cliApp.StartAsync();

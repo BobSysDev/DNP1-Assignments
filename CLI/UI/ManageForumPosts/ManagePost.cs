@@ -59,9 +59,26 @@ public class ManagePost
             case "7":
                 Console.WriteLine("|Enter the Post ID to update:|");
                 var postToUpdateId = Console.ReadLine();
+                Console.WriteLine($"Change Title: ");
+                var changeTitle = Console.ReadLine();
+                Console.WriteLine($"Change Body: ");
+                var changeBody = Console.ReadLine();
+                Console.WriteLine($"New Title: --{changeTitle}--: New Body: --{changeBody}--");
+                
                 var postToUpdate = await _postRepository.GetSingleAsync(postToUpdateId);
-                await _postRepository.UpdateAsync(postToUpdate);
-                break;
+                if (postToUpdate != null)
+                {
+                    postToUpdate.Title = changeTitle;
+                    postToUpdate.Body = changeBody;
+                    await _postRepository.UpdateAsync(postToUpdate);
+                    Console.WriteLine($"Post {postToUpdateId} has been updated.");
+                }
+                else
+                {
+                    Console.WriteLine($"Post with ID {postToUpdateId} not found.");
+                }
+                break
+                    ;
             default:
                 Console.WriteLine("|Invalid choice.|");
                 break;
