@@ -24,7 +24,7 @@ public class PostInMemoryRepository : IPostRepository
 
     public Task UpdateAsync(Post post)
     {
-        Post? existingPost = posts.SingleOrDefault(p => p.PostId == post.PostId);
+         Post? existingPost = posts.SingleOrDefault(p => p.PostId == post.PostId);
 
         if (existingPost is null) throw new InvalidOperationException($"Post with ID {post.PostId} not found");
 
