@@ -71,4 +71,25 @@ public class PostsController
       
       return Results.Ok(posts);
    }
+   
+   [HttpPost("{id}/like")]
+   public async Task<IResult> LikePost([FromRoute] string id)
+   {
+      await _postRepository.LikePostAsync(id);
+      return Results.Ok();
+   }
+   
+   [HttpDelete("{id}/like")]
+   public async Task<IResult> RemoveLikePost([FromRoute] string id)
+   {
+      await _postRepository.RemoveLikePostAsync(id);
+      return Results.Ok();
+   }
+   
+   [HttpDelete("{id}")]
+   public async Task<IResult> DeletePost([FromRoute] string id)
+   {
+      await _postRepository.DeleteAsync(id);
+      return Results.Ok();
+   }
 }
