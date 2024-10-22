@@ -95,8 +95,18 @@ public class UsersController : ControllerBase
     {
         List<User> users = new List<User>();
         users.AddRange(userRepo.GetMany());
-        IEnumerable<User> usersFound = users.Where(user => user.Username.Contains(username));
+        List<User> usersFound = users.Where(user => user.Username.Contains(username)).ToList();
         
-        
+        List<UserDTO> dtos = new();
+        for (int i = 0; i < usersFound.Count; i++)
+        {
+            UserDTO dto = new()
+            {
+                Id = usersFound.ElementAt(i).Id,
+                Username = usersFound.ElementAt(i).Username
+            };
+            dtos.Add(dto);
+        }
+        return Accepted($"/Users/{dtos}", usersFound);
     }
 }
