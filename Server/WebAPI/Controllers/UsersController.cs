@@ -95,6 +95,8 @@ public class UsersController : ControllerBase
     {
         List<User> users = new List<User>();
         users.AddRange(userRepo.GetMany());
-        users.Where(user => usersFound.Contains(user.Username));    
+        IEnumerable<User> usersFound = users.Where(user => user.Username.Contains(username));
+        
+        
     }
 }
