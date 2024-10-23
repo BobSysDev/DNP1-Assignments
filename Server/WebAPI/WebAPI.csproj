@@ -7,14 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\Entities\Entities.csproj" />
       <ProjectReference Include="..\..\Filerepositories\Filerepositories.csproj" />
       <ProjectReference Include="..\..\RepositoryContracts\RepositoryContracts.csproj" />
       <ProjectReference Include="..\..\Shared\DTOs\DTOs.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.OpenApi" Version="1.6.22" />
+      <PackageReference Include="Swagger.Extensions.DependencyInjection" Version="1.6.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.8.1" />
     </ItemGroup>
 
 </Project>
