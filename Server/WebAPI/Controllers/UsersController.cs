@@ -21,24 +21,57 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<User>> AddUser([FromBody] CreateUserDTO request)
     {
-        await VerifyUserNameIsAvailableAsync(request.Username);
-
-        User user = new(request.Username, request.Password, -1);
-        User created = await userRepo.AddAsync(user);
-
-        UserDTO dto = new()
+        if(request.Username == null || request.Username.Equals(""))
         {
+            return BadRequest("Username required.");
+        }
+        
+        if(request.Password == null || request.Password.Equals(""))
+        {
+            return BadRequest("Password required.");
+        }
+        
+        if(request.Username.Equals("string")|| request.Password.Equals("string"))
+        {
+            return BadRequest("Invalid input.");
+        }
 
-            Id = created.Id,
+        try
+        {
+            Task<Boolean> ver = VerifyUserNameIsAvailableAsync(request.Username);
+            if (ver.Result == false)
+            {
+               return BadRequest($"Username ({request.Username}) is not available.");
+            }
+            User user = new(request.Username, request.Password, -1);
+            User created = await userRepo.AddAsync(user);
 
-            Username = created.Username
+            PublicUserDTO dto = new()
+            {
 
-        };
-        return Created($"/Users/{dto.Id}", created);
+                Id = created.Id,
+
+                Username = created.Username
+
+            };
+            return Created($"/Users/{dto.Id}", dto);
+        }
+        catch (InvalidOperationException e)
+        {
+            return Problem(e.Message); 
+        }
+        catch (InvalidDataException e)
+        {
+            return Problem(e.Message); 
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message); 
+        }
     }
 
 
-    private async Task VerifyUserNameIsAvailableAsync(string newUsername)
+    private async Task<Boolean> VerifyUserNameIsAvailableAsync(string newUsername)
     {
         // var currentUser = await userRepo.GetSingleAsync(userId);
         //
@@ -52,73 +85,160 @@ public class UsersController : ControllerBase
         //     return;
         // }
         
-        var existingUser = await userRepo.GetByUsernameAsync(newUsername);
-        if (existingUser != null)
+        try
         {
-            throw new InvalidOperationException("Username is already taken.");
+            User existingUser = await userRepo.GetByUsernameAsync(newUsername);
+            if (existingUser != null)
+            {
+                return false;
+            }
         }
+        catch (InvalidOperationException e)
+        {
+            return true;
+        }
+        catch (InvalidDataException e)
+        {
+            return false;
+        }
+        
+        return false;
     }
 
     [HttpPatch]
     public async Task<ActionResult<User>> UpdateUser([FromBody] UserDTO request)
     {
-        User user = new(request.Username, request.Password, request.Id);
-        userRepo.UpdateAsync(user);
-        User updated = await userRepo.GetSingleAsync(user.Id);
-        UserDTO dto = new()
+        if(request.Username == null || request.Username.Equals(""))
         {
-            Id = updated.Id,
-            Username = updated.Username
-        };
-        return Accepted($"/Users/{dto.Id}", updated);
+            return BadRequest("Username required.");
+        }
+        
+        if(request.Password == null || request.Password.Equals(""))
+        {
+            return BadRequest("Password required.");
+        }
+        
+        if(request.Username.Equals("string")|| request.Password.Equals("string"))
+        {
+            return BadRequest("Invalid input.");
+        }
+
+        try
+        {
+            User user = new(request.Username, request.Password, request.Id);
+            await userRepo.UpdateAsync(user);
+            User updated = await userRepo.GetSingleAsync(user.Id);
+            UserDTO dto = new()
+            {
+                Id = updated.Id,
+                Username = updated.Username
+            };
+            return Accepted($"/Users/{dto.Id}", updated);
+        }
+        catch (InvalidDataException e)
+        {
+            return Problem(e.Message); 
+        }
+        catch (InvalidOperationException e)
+        {
+            return NotFound(e.Message); 
+        }
+        
     }
 
     [HttpGet("/User/{id}")]
     public async Task<ActionResult<User>> GetSingle([FromRoute] int id)
     {
-        User gotUser = await userRepo.GetByIdAsync(id);
-        if (gotUser is null)
+        if(id==null)
         {
-            throw new InvalidOperationException("User does not exist.");
+            return BadRequest("Id required.");
         }
 
-        UserDTO dto = new()
+        try
         {
-            Id = gotUser.Id,
-            Username = gotUser.Username
-        };
-        return Accepted($"/Users/{dto.Id}", gotUser);
+            User gotUser = await userRepo.GetByIdAsync(id);
+
+            PublicUserDTO dto = new()
+            {
+                Id = gotUser.Id,
+                Username = gotUser.Username
+            };
+            return Accepted($"/Users/{dto.Id}", dto);
+        }
+        catch (InvalidDataException e)
+        {
+            return Problem(e.Message); 
+        }
+        catch (InvalidOperationException e)
+        {
+            return NotFound(e.Message); 
+        }
+        
     }
 
     [HttpGet ("/Users/{username}")]
 
     public async Task<ActionResult<List<User>>> GetMany([FromRoute] string username)
     {
-        List<User> users = new List<User>();
-        users.AddRange(userRepo.GetMany());
-        List<User> usersFound = users.Where(user => user.Username.Contains(username)).ToList();
-        
-        List<UserDTO> dtos = new();
-        for (int i = 0; i < usersFound.Count; i++)
+        if(username==null)
         {
-            UserDTO dto = new()
-            {
-                Id = usersFound.ElementAt(i).Id,
-                Username = usersFound.ElementAt(i).Username
-            };
-            dtos.Add(dto);
+            return BadRequest("Input required.");
         }
-        return Accepted($"/Users/{dtos}", usersFound);
+
+        try
+        {
+            List<User> users = new List<User>();
+            users.AddRange(userRepo.GetMany());
+            List<User> usersFound = users.Where(user => user.Username.Contains(username)).ToList();
+        
+            List<PublicUserDTO> dtos = new();
+            for (int i = 0; i < usersFound.Count; i++)
+            {
+                PublicUserDTO dto = new()
+                {
+                    Id = usersFound.ElementAt(i).Id,
+                    Username = usersFound.ElementAt(i).Username
+                };
+                dtos.Add(dto);
+            }
+            return Accepted($"/Users/{dtos}", dtos);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message); 
+        }
+        
     }
 
     [HttpDelete]public async Task<ActionResult<User>> Delete([FromBody] DeleteUserDTO request)
     {
-        User userToDelete = await userRepo.GetByIdAsync(request.Id);
-        if (userToDelete.Password == request.Password)
+        if (request.Id == null || request.Id == 0) 
         {
-            userRepo.DeleteAsync(request.Id);
-            return Ok();
+            return BadRequest("ID required.");
         }
-        return Unauthorized("Wrong password.");
+        if(request.Password==null || request.Password.Equals(""))
+        {
+            return BadRequest("Password required.");
+        }
+
+        try
+        {
+            User userToDelete = await userRepo.GetByIdAsync(request.Id);
+            if (userToDelete.Password == request.Password)
+            {
+                userRepo.DeleteAsync(request.Id);
+                return Ok();
+            }
+            return Unauthorized("Wrong password.");
+        }
+        catch (InvalidDataException e)
+        {
+            return Problem(e.Message); 
+        }
+        catch (InvalidOperationException e)
+        {
+            return Problem(e.Message); 
+        }
+        
     }
 }

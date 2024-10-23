@@ -121,7 +121,7 @@ public class UserFileRepository : IUserRepository
         
         User? userToReturn = users.SingleOrDefault(u => u.Username == username);
         // Console.WriteLine($"Attempted to find User with Id {id}, but none was found.");
-        // if (userToReturn is null) throw new InvalidOperationException($"User({username}) not found");
+        if (userToReturn is null) throw new InvalidOperationException($"User({username}) not found");
         return userToReturn;
     }
 
