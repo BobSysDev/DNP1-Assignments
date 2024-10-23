@@ -11,7 +11,6 @@ builder.Services.AddScoped<IPostRepository, PostFileRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
 builder.Services.AddScoped<IUserRepository, UserFileRepository>();
 
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
