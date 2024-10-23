@@ -45,6 +45,34 @@ public class CommentInMemoryRepository : ICommentRepository
         return Task.CompletedTask;
     }
 
+    public Task DeleteCascadeAsync(string id)
+    {
+        DeleteCascade(id, comments);
+        return Task.CompletedTask;
+    }
+    
+    private async Task DeleteCascade(string parentId, List<Comment> localComments)
+    {
+        List<Comment> children = [];
+        foreach (var comment in localComments)
+        {
+            if (comment.ParentId == parentId)
+            {
+                children.Add(comment);
+            }
+        }
+
+        if (children.Count > 0)
+        {
+            foreach (var child in children)
+            {
+                await DeleteCascade(child.Id, localComments);
+            }
+        }
+
+        await DeleteAsync(parentId);
+    }
+
     public Task<Comment> GetSingleAsync(string id)
     {
         var commentToRetrieve = comments.SingleOrDefault(c => c.Id == id);

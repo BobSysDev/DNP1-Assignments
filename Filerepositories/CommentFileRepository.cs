@@ -69,6 +69,19 @@ public class CommentFileRepository : ICommentRepository
         });
         await File.WriteAllTextAsync(_filePath, commentsAsJson);
     }
+
+    public async Task DeleteCascadeAsync(string id)
+    {
+        var commentsAsJson = await File.ReadAllTextAsync(_filePath);
+        List<Comment>? comments = JsonSerializer.Deserialize<List<Comment>>(commentsAsJson);
+        
+        if (comments is null)
+        {
+            throw new InvalidDataException("Deserializing comment list returned NULL");
+        }
+        
+        await DeleteCascade(id, comments);
+    }
     
     public async Task DeleteAsync(string id)
     {
@@ -90,6 +103,28 @@ public class CommentFileRepository : ICommentRepository
             WriteIndented = true
         });
         await File.WriteAllTextAsync(_filePath, commentsAsJson);
+    }
+    
+    private async Task DeleteCascade(string parentId, List<Comment> comments)
+    {
+        List<Comment> children = [];
+        foreach (var comment in comments)
+        {
+            if (comment.ParentId == parentId)
+            {
+                children.Add(comment);
+            }
+        }
+
+        if (children.Count > 0)
+        {
+            foreach (var child in children)
+            {
+                await DeleteCascade(child.Id, comments);
+            }
+        }
+
+        await DeleteAsync(parentId);
     }
     
     public async Task<Comment> GetSingleAsync(string id)

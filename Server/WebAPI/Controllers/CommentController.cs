@@ -121,7 +121,7 @@ public class CommentController
             return Results.NotFound(e.Message);
         }
 
-        await commentRepository.DeleteAsync(id);
+        await commentRepository.DeleteCascadeAsync(id);
         return Results.Ok();
     }
 

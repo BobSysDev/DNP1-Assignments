@@ -18,7 +18,7 @@ public class PostsController
    }
 
    [HttpPost]
-   public async Task<IResult> CreateNewPost([FromBody] PostDTO postDto)
+   public async Task<IResult> CreateNewPost([FromBody] CreatePostDTO postDto)
    {
      if (string.IsNullOrEmpty(postDto.Title))
      {

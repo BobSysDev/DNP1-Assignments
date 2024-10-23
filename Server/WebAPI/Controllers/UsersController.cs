@@ -19,11 +19,11 @@ public class UsersController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult<User>> AddUser([FromBody] UserDTO request)
+    public async Task<ActionResult<User>> AddUser([FromBody] CreateUserDTO request)
     {
         await VerifyUserNameIsAvailableAsync(request.Username);
 
-        User user = new(request.Username, request.Password, request.Id);
+        User user = new(request.Username, request.Password, -1);
         User created = await userRepo.AddAsync(user);
 
         UserDTO dto = new()

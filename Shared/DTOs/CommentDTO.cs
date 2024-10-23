@@ -2,7 +2,7 @@
 
 public class CommentDTO
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
     public string Body { get; set; }
     public int UserId { get; set; }
     public int Likes { get; set; }
