@@ -69,7 +69,8 @@ public class CommentController
                 Id = comment.Id,
                 Body = comment.Body,
                 ParentId = comment.ParentId,
-                UserId = comment.UserId
+                UserId = comment.UserId,
+                Likes = comment.Likes
             };
             
             dtos.Add(dto);
@@ -173,13 +174,28 @@ public class CommentController
                 Id = comment.Id,
                 Body = comment.Body,
                 ParentId = comment.ParentId,
-                UserId = comment.UserId
+                UserId = comment.UserId,
+                Likes = comment.Likes
             };
             
             dtos.Add(dto);
         }
         
-        return Results.Accepted($"/Comment/User/{userId}/", dtos);
+        return Results.Accepted($"/User/{userId}/Comments", dtos);
+    }
+    
+    [HttpGet("/Post/{postId}/Comments")]
+    public async Task<IResult> GetCommentsByPost([FromRoute] string postId)
+    {
+        var dtos = new List<CommentDTO>();
+        foreach (var comment in commentRepository.GetManyAsync())
+        {
+            if (comment.ParentId != postId) continue;
+            
+            dtos.Add(ConvertToDto(comment));
+        }
+        
+        return Results.Accepted($"/Post/{postId}/Comments/", dtos);
     }
     
     private CommentDTO ConvertToDto(Comment comment)

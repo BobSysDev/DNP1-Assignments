@@ -6,4 +6,5 @@ public class SimpleCommentDTO
     public string Body { get; set; }
     public int UserId { get; set; }
     public string ParentId { get; set; }
+    public int Likes { get; set; }
 }
