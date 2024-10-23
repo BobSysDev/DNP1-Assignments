@@ -3,5 +3,30 @@
     "Username": "kvecko",
     "Password": "pass",
     "Id": 1
+  },
+  {
+    "Username": "samo",
+    "Password": "ss",
+    "Id": 4
+  },
+  {
+    "Username": "olek",
+    "Password": "ss",
+    "Id": 5
+  },
+  {
+    "Username": "marius",
+    "Password": "ss",
+    "Id": 6
+  },
+  {
+    "Username": "sebo2",
+    "Password": "string",
+    "Id": 7
+  },
+  {
+    "Username": "sebo3",
+    "Password": "string",
+    "Id": 8
   }
 ]

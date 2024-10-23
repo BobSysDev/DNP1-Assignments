@@ -21,7 +21,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<User>> AddUser([FromBody] UserDTO request)
     {
-        //await VerifyUserNameIsAvailableAsync(request.Username, request.Id);
+        await VerifyUserNameIsAvailableAsync(request.Username);
 
         User user = new(request.Username, request.Password, request.Id);
         User created = await userRepo.AddAsync(user);
@@ -38,7 +38,7 @@ public class UsersController : ControllerBase
     }
 
 
-    private async Task VerifyUserNameIsAvailableAsync(string newUsername, int userId)
+    private async Task VerifyUserNameIsAvailableAsync(string newUsername)
     {
         // var currentUser = await userRepo.GetSingleAsync(userId);
         //
@@ -46,17 +46,17 @@ public class UsersController : ControllerBase
         // {
         //     throw new InvalidOperationException("User not found.");
         // }
-        //
+        
         // if (currentUser.Username == newUsername)
         // {
         //     return;
         // }
-        //
-        // var existingUser = await userRepo.GetByUsernameAsync(newUsername);
-        // if (existingUser != null)
-        // {
-        //     throw new InvalidOperationException("Username is already taken.");
-        // }
+        
+        var existingUser = await userRepo.GetByUsernameAsync(newUsername);
+        if (existingUser != null)
+        {
+            throw new InvalidOperationException("Username is already taken.");
+        }
     }
 
     [HttpPatch]
@@ -73,10 +73,10 @@ public class UsersController : ControllerBase
         return Accepted($"/Users/{dto.Id}", updated);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<User>> GetSingle([FromBody] UserDTO request)
+    [HttpGet("/User/{id}")]
+    public async Task<ActionResult<User>> GetSingle([FromRoute] int id)
     {
-        User gotUser = await userRepo.GetSingleAsync(request.Id);
+        User gotUser = await userRepo.GetByIdAsync(id);
         if (gotUser is null)
         {
             throw new InvalidOperationException("User does not exist.");
@@ -90,8 +90,9 @@ public class UsersController : ControllerBase
         return Accepted($"/Users/{dto.Id}", gotUser);
     }
 
-    [HttpGet]
-    public async Task<ActionResult<List<User>>> GetMany([FromBody] string username)
+    [HttpGet ("/Users/{username}")]
+
+    public async Task<ActionResult<List<User>>> GetMany([FromRoute] string username)
     {
         List<User> users = new List<User>();
         users.AddRange(userRepo.GetMany());
@@ -108,5 +109,16 @@ public class UsersController : ControllerBase
             dtos.Add(dto);
         }
         return Accepted($"/Users/{dtos}", usersFound);
+    }
+
+    [HttpDelete]public async Task<ActionResult<User>> Delete([FromBody] DeleteUserDTO request)
+    {
+        User userToDelete = await userRepo.GetByIdAsync(request.Id);
+        if (userToDelete.Password == request.Password)
+        {
+            userRepo.DeleteAsync(request.Id);
+            return Ok();
+        }
+        return Unauthorized("Wrong password.");
     }
 }
