@@ -108,4 +108,38 @@ public class UserFileRepository : IUserRepository
         List<User> users = JsonSerializer.Deserialize<List<User>>(usersAsJson)!; 
         return users.AsQueryable();
     }
+    
+    public async Task<User> GetByUsernameAsync(string username)
+    {
+        var usersAsJson = await File.ReadAllTextAsync(_filePath);
+        List<User>? users = JsonSerializer.Deserialize<List<User>>(usersAsJson);
+
+        if (users is null)
+        {
+            throw new InvalidDataException("Deserializing user list returned NULL");
+        }
+        
+        User? userToReturn = users.SingleOrDefault(u => u.Username == username);
+        // Console.WriteLine($"Attempted to find User with Id {id}, but none was found.");
+        if (userToReturn is null) throw new InvalidOperationException($"User({username}) not found");
+        return userToReturn;
+    }
+
+    public async Task<User> GetByIdAsync(int id)
+    {
+        var usersAsJson = await File.ReadAllTextAsync(_filePath);
+        List<User>? users = JsonSerializer.Deserialize<List<User>>(usersAsJson);
+
+        if (users is null)
+        {
+            throw new InvalidDataException("Deserializing user list returned NULL");
+        }
+        
+        User? userToReturn = users.SingleOrDefault(u => u.Id == id);
+        
+        // Console.WriteLine($"Attempted to find User with Id {id}, but none was found.");
+        if (userToReturn is null) throw new InvalidOperationException($"User({id}) not found");
+        return userToReturn;
+    }
+
 }

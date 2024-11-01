@@ -29,8 +29,8 @@ public class PostFileRepository : IPostRepository
 
         if (posts.Any())
         {
-            var resultPosts = posts.Max(p => Int32.Parse(p.PostId.Substring(1, p.PostId.Length - 1))) + 1;
-            post.PostId = "P" + resultPosts;
+            var result = posts.Max(p => Int32.Parse(p.PostId.Substring(1, p.PostId.Length - 1))) + 1;
+            post.PostId = "P" + result;
         }
         else
         {

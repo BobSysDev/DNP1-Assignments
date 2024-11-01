@@ -10,6 +10,8 @@ public class Post
         UserId = userId;
         Likes = 0;
     }
+    
+    public Post() { }
 
     public string Title { get; set; }
     public string Body { get; set; }
