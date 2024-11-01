@@ -42,8 +42,16 @@ public class UserInMemoryRepository : IUserRepository
         if (userToReturn is null) throw new InvalidOperationException($"User({id}) not found");
         return Task.FromResult(userToReturn);
     }
-    
 
+    public Task<User> GetByIdAsync(int id)
+    {
+        return null;
+    }
+
+    public Task<User> GetByUsernameAsync(String username)
+    {
+        return null;
+    }
 
     public IQueryable<User> GetMany()
     {
