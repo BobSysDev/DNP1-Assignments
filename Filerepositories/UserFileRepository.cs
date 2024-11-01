@@ -7,6 +7,8 @@ namespace Filerepositories;
 public class UserFileRepository : IUserRepository
 {
     private readonly string _filePath = "users.json";
+    private List<User> users = new List<User>();
+
 
     public UserFileRepository()
     {
@@ -140,6 +142,18 @@ public class UserFileRepository : IUserRepository
         // Console.WriteLine($"Attempted to find User with Id {id}, but none was found.");
         if (userToReturn is null) throw new InvalidOperationException($"User({id}) not found");
         return userToReturn;
+    }
+    public async Task<List<User>> GetAllAsync()
+    {
+        var usersAsJson = await File.ReadAllTextAsync(_filePath);
+        List<User>? users = JsonSerializer.Deserialize<List<User>>(usersAsJson);
+
+        if (users is null)
+        {
+            throw new InvalidDataException("Deserializing user list returned NULL");
+        }
+
+        return users;
     }
 
 }
