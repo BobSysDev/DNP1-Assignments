@@ -1,15 +1,17 @@
+using BlazorApp.Components.Auth;
 using Filerepositories;
+using Microsoft.AspNetCore.Components.Authorization;
 using RepositoryContracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IPostRepository, PostFileRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
 builder.Services.AddScoped<IUserRepository, UserFileRepository>();
+builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
 
 var app = builder.Build();
 
