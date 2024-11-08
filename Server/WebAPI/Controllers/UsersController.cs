@@ -6,8 +6,7 @@ using RepositoryContracts;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-
+[Route("Users")]  
 public class UsersController : ControllerBase
 {
     private readonly IUserRepository userRepo;
@@ -17,52 +16,19 @@ public class UsersController : ControllerBase
         this.userRepo = userRepo;
     }
 
-
     [HttpPost]
     public async Task<ActionResult<PublicUserDTO>> AddUser([FromBody] CreateUserDTO request)
     {
-        if(request.Username == null || request.Username.Equals(""))
-        {
-            return BadRequest("Username required.");
-        }
-        
-        if(request.Password == null || request.Password.Equals(""))
-        {
-            return BadRequest("Password required.");
-        }
-        
-        if(request.Username.Equals("string")|| request.Password.Equals("string"))
-        {
-            return BadRequest("Invalid input.");
-        }
-
         try
         {
-            Task<Boolean> ver = VerifyUserNameIsAvailableAsync(request.Username);
-            if (ver.Result == false)
+            List<User> users = await userRepo.GetAllAsync();
+            List<PublicUserDTO> dtos = users.Select(u => new PublicUserDTO
             {
-               return BadRequest($"Username ({request.Username}) is not available.");
-            }
-            User user = new(request.Username, request.Password, -1);
-            User created = await userRepo.AddAsync(user);
+                Id = u.Id,
+                Username = u.Username
+            }).ToList();
 
-            PublicUserDTO dto = new()
-            {
-
-                Id = created.Id,
-
-                Username = created.Username
-
-            };
-            return Created($"/Users/{dto.Id}", dto);
-        }
-        catch (InvalidOperationException e)
-        {
-            return Problem(e.Message); 
-        }
-        catch (InvalidDataException e)
-        {
-            return Problem(e.Message); 
+            return Ok(dtos); // Returning OK with dtos
         }
         catch (Exception e)
         {
@@ -261,6 +227,5 @@ public class UsersController : ControllerBase
         {
             return Problem(e.Message); 
         }
-        
     }
 }
