@@ -16,6 +16,12 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped(sp => new HttpClient
+{
+    BaseAddress = new Uri("https://quickshift.electimore.xyz")
+});
+builder.Services.AddScoped<ICommentService, HttpCommentService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

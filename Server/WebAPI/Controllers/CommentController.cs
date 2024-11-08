@@ -128,6 +128,7 @@ public class CommentController
     [HttpPost("{id}/like")]
     public async Task<IResult> LikeComment([FromRoute] string id)
     {
+        Console.WriteLine("hello");
         try
         {
             await commentRepository.LikeCommentAsync(id);

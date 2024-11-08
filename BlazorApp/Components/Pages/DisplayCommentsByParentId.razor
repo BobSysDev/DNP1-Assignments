@@ -1,0 +1,103 @@
+﻿@page "/DisplayCommentsByParentId"
+@using BlazorApp.Services
+@using DTOs
+@attribute [StreamRendering]
+@inject ICommentService CommentService
+@rendermode InteractiveServer
+
+<h3>DisplayCommentsByParentId - testing</h3>
+<p>Enter the post ID of the post of which you'd like to view comments of: </p>
+<InputText @bind-Value="idBox"></InputText>
+<button @onclick="DisplayComments">Test!</button>
+
+@if (dtos != null)
+{
+    foreach (var dto in dtos)
+    {
+        <ul>
+            @PrintCommentCascade(dto)
+        </ul>
+    }
+}
+
+
+@code {
+    private string idBox { get; set; } = "";
+    private List<CommentDTO>? dtos { get; set; }
+
+    private Task<string> GetUserUsernameById(int id)
+    {
+        return null;
+    }
+
+    private RenderFragment PrintCommentCascade(CommentDTO comment)
+    {
+        return
+            @<li>
+                <div class="@comment.Id">
+                    <p>By: [user]</p>
+                    <p>Likes: @comment.Likes | <button @onclick="() => LikeComment(comment.Id)">Like</button> | <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | <button @onclick="() => DeleteComment(comment.Id)">Delete</button></p>
+                    <p>
+                        <b>@comment.Body</b>
+                    </p>
+                    <ul>
+                        @if (comment.Children.Count > 0)
+                        {
+                            foreach (var child in comment.Children)
+                            {
+                                @PrintCommentCascade(child)
+                            }
+                        }
+                    </ul>
+                </div>
+            </li>;
+    }
+
+    private async Task DisplayComments()
+    {
+        dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
+    }
+
+    private async Task LikeComment(string id)
+    {
+        Console.Write($"Liking: {id}");
+        await CommentService.LikeCommentAsync(id);
+        FindACommentDtoById(dtos, id).Likes++;
+        StateHasChanged();
+    }
+
+    private async Task DislikeComment(string id)
+    {
+        Console.Write($"Disiking: {id}");
+        FindACommentDtoById(dtos, id).Likes--;
+        await CommentService.DislikeCommentAsync(id);
+        StateHasChanged();
+    }
+    
+    private async Task DeleteComment(string id)
+    {
+        Console.Write($"Deleting: {id}");
+        await CommentService.DeleteCommentAsync(id);
+        dtos = null;
+        await DisplayComments();
+        StateHasChanged();
+    }
+
+    private CommentDTO? FindACommentDtoById(List<CommentDTO> listToSearch, string id)
+    {
+        foreach (var item in listToSearch)
+        {
+            if (item.Id == id)
+            {
+                return item;
+            }
+            if (item.Children.Count > 0)
+            {
+                FindACommentDtoById(item.Children, id);
+            }
+        }
+
+        return null;
+    }
+
+}
