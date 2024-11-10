@@ -36,7 +36,6 @@ public class UsersController : ControllerBase
         }
     }
 
-
     private async Task<Boolean> VerifyUserNameIsAvailableAsync(string newUsername)
     {
         // var currentUser = await userRepo.GetSingleAsync(userId);

@@ -3,6 +3,7 @@
 @using DTOs
 @attribute [StreamRendering]
 @inject ICommentService CommentService
+@inject IUserService UserService
 @rendermode InteractiveServer
 
 <h3>DisplayCommentsByParentId - testing</h3>
@@ -10,7 +11,7 @@
 <InputText @bind-Value="idBox"></InputText>
 <button @onclick="DisplayComments">Test!</button>
 
-@if (dtos != null)
+@if (dtos != null && UsersBoundToComments != null)
 {
     foreach (var dto in dtos)
     {
@@ -24,18 +25,14 @@
 @code {
     private string idBox { get; set; } = "";
     private List<CommentDTO>? dtos { get; set; }
-
-    private Task<string> GetUserUsernameById(int id)
-    {
-        return null;
-    }
+    private Dictionary<CommentDTO, string>? UsersBoundToComments { get; set; }
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {
         return
             @<li>
                 <div class="@comment.Id">
-                    <p>By: [user]</p>
+                    <p>By: @(UsersBoundToComments[comment])</p>
                     <p>Likes: @comment.Likes | <button @onclick="() => LikeComment(comment.Id)">Like</button> | <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | <button @onclick="() => DeleteComment(comment.Id)">Delete</button></p>
                     <p>
                         <b>@comment.Body</b>
@@ -56,11 +53,30 @@
     private async Task DisplayComments()
     {
         dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
+        UsersBoundToComments = new Dictionary<CommentDTO, string>();
+        foreach (var comment in dtos)
+        {
+            await AssignUsersCascade(comment);
+        }
+        StateHasChanged();
+    }
+
+    private async Task AssignUsersCascade(CommentDTO comment)
+    {
+        var authorUsername = await GetUsernameByUserId(comment.UserId);
+        UsersBoundToComments.Add(comment, authorUsername);
+        
+        if (comment.Children.Count > 0)
+        {
+            foreach (var child in comment.Children)
+            {
+                await AssignUsersCascade(child);
+            }
+        }
     }
 
     private async Task LikeComment(string id)
     {
-        Console.Write($"Liking: {id}");
         await CommentService.LikeCommentAsync(id);
         FindACommentDtoById(dtos, id).Likes++;
         StateHasChanged();
@@ -68,7 +84,6 @@
 
     private async Task DislikeComment(string id)
     {
-        Console.Write($"Disiking: {id}");
         FindACommentDtoById(dtos, id).Likes--;
         await CommentService.DislikeCommentAsync(id);
         StateHasChanged();
@@ -76,7 +91,6 @@
     
     private async Task DeleteComment(string id)
     {
-        Console.Write($"Deleting: {id}");
         await CommentService.DeleteCommentAsync(id);
         dtos = null;
         await DisplayComments();
@@ -93,11 +107,17 @@
             }
             if (item.Children.Count > 0)
             {
-                FindACommentDtoById(item.Children, id);
+                return FindACommentDtoById(item.Children, id);
             }
         }
 
         return null;
     }
 
+    private async Task<string> GetUsernameByUserId(int id)
+    {
+        PublicUserDTO dto = await UserService.GetUserById(id);
+        String username = dto.Username;
+        return username;
+    }
 }

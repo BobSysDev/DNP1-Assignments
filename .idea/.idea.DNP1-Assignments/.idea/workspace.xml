@@ -13,7 +13,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="" />
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -34,12 +40,13 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/BobSysDev/DNP1-Assignments.git&quot;,
-    &quot;accountId&quot;: &quot;7d13484d-3852-4e09-8284-fa9ebf5e3f53&quot;
+    &quot;accountId&quot;: &quot;55c8966d-bb7e-4438-ad82-d84dd6128bab&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c439425da351c75ac7d966a1cc8324b51a9c471865af79d2f2f3fcb65e392/HttpClient.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -48,6 +55,7 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2o3iiplZHpDhU2290cqtnZcJGx8" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -55,8 +63,11 @@
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;.NET Launch Settings Profile.BlazorApp: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.WebAPI: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.WebAPI: https.executor&quot;: &quot;Run&quot;,
     &quot;.NET Project.CLI.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;comments-blazor&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -186,15 +197,20 @@
       <updated>1730104791910</updated>
       <workItem from="1730104794674" duration="86000" />
       <workItem from="1730448538057" duration="10778000" />
+      <workItem from="1731175144394" duration="637000" />
+      <workItem from="1731276847087" duration="144000" />
+      <workItem from="1731277002622" duration="1905000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <option name="LAST_COMMIT_MESSAGE" value="" />
   </component>
 </project>
