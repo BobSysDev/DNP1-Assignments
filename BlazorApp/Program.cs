@@ -3,11 +3,8 @@ using BlazorApp.Components.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
-// Add services to the container.
-builder.Services.AddRazorComponents()
-    .AddInteractiveServerComponents();
+builder.Services.AddScoped<IUserService, HttpUserService>();
+builder.Services.AddScoped<ICommentService, HttpCommentService>();
 builder.Services.AddScoped<IPostService, HttpPostService>();
 
 builder.Services.AddScoped(sp => new HttpClient
@@ -15,6 +12,8 @@ builder.Services.AddScoped(sp => new HttpClient
     BaseAddress = new Uri("https://quickshift.electimore.xyz")
 });
 
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
 
 var app = builder.Build();
 

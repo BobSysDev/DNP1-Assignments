@@ -6,8 +6,7 @@ using RepositoryContracts;
 namespace WebAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
-
+[Route("Users")]  
 public class UsersController : ControllerBase
 {
     private readonly IUserRepository userRepo;
@@ -17,59 +16,25 @@ public class UsersController : ControllerBase
         this.userRepo = userRepo;
     }
 
-
     [HttpPost]
-    public async Task<ActionResult<User>> AddUser([FromBody] CreateUserDTO request)
+    public async Task<ActionResult<PublicUserDTO>> AddUser([FromBody] CreateUserDTO request)
     {
-        if(request.Username == null || request.Username.Equals(""))
-        {
-            return BadRequest("Username required.");
-        }
-        
-        if(request.Password == null || request.Password.Equals(""))
-        {
-            return BadRequest("Password required.");
-        }
-        
-        if(request.Username.Equals("string")|| request.Password.Equals("string"))
-        {
-            return BadRequest("Invalid input.");
-        }
-
         try
         {
-            Task<Boolean> ver = VerifyUserNameIsAvailableAsync(request.Username);
-            if (ver.Result == false)
+            List<User> users = await userRepo.GetAllAsync();
+            List<PublicUserDTO> dtos = users.Select(u => new PublicUserDTO
             {
-               return BadRequest($"Username ({request.Username}) is not available.");
-            }
-            User user = new(request.Username, request.Password, -1);
-            User created = await userRepo.AddAsync(user);
+                Id = u.Id,
+                Username = u.Username
+            }).ToList();
 
-            PublicUserDTO dto = new()
-            {
-
-                Id = created.Id,
-
-                Username = created.Username
-
-            };
-            return Created($"/Users/{dto.Id}", dto);
-        }
-        catch (InvalidOperationException e)
-        {
-            return Problem(e.Message); 
-        }
-        catch (InvalidDataException e)
-        {
-            return Problem(e.Message); 
+            return Ok(dtos); // Returning OK with dtos
         }
         catch (Exception e)
         {
             return Problem(e.Message); 
         }
     }
-
 
     private async Task<Boolean> VerifyUserNameIsAvailableAsync(string newUsername)
     {
@@ -106,7 +71,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPatch]
-    public async Task<ActionResult<User>> UpdateUser([FromBody] UserDTO request)
+    public async Task<ActionResult<PublicUserDTO>> UpdateUser([FromBody] UserDTO request)
     {
         if(request.Username == null || request.Username.Equals(""))
         {
@@ -128,7 +93,7 @@ public class UsersController : ControllerBase
             User user = new(request.Username, request.Password, request.Id);
             await userRepo.UpdateAsync(user);
             User updated = await userRepo.GetSingleAsync(user.Id);
-            UserDTO dto = new()
+            PublicUserDTO dto = new()
             {
                 Id = updated.Id,
                 Username = updated.Username
@@ -147,7 +112,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("/User/{id}")]
-    public async Task<ActionResult<User>> GetSingle([FromRoute] int id)
+    public async Task<ActionResult<PublicUserDTO>> GetSingle([FromRoute] int id)
     {
         if(id==null)
         {
@@ -177,8 +142,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet ("/Users/{username}")]
-
-    public async Task<ActionResult<List<User>>> GetMany([FromRoute] string username)
+    public async Task<ActionResult<List<PublicUserDTO>>> GetMany([FromRoute] string username)
     {
         if(username==null)
         {
@@ -201,16 +165,39 @@ public class UsersController : ControllerBase
                 };
                 dtos.Add(dto);
             }
-            return Accepted($"/Users/{dtos}", dtos);
+            return Accepted($"/Users/{username}", dtos);
         }
         catch (Exception e)
         {
             return Problem(e.Message); 
         }
-        
+    }
+    
+    [HttpGet ("/Users/")]
+    public async Task<ActionResult<List<PublicUserDTO>>> GetMany()
+    {
+        try
+        {
+            List<User> users = userRepo.GetMany().ToList();
+            List<PublicUserDTO> dtos = new();
+            users.ForEach(user =>
+            {
+                dtos.Add(new PublicUserDTO
+                {
+                    Id = user.Id,
+                    Username = user.Username
+                });
+            });
+            
+            return Accepted($"/Users/", dtos);
+        }
+        catch (Exception e)
+        {
+            return Problem(e.Message); 
+        }
     }
 
-    [HttpDelete]public async Task<ActionResult<User>> Delete([FromBody] DeleteUserDTO request)
+    [HttpDelete]public async Task<ActionResult> Delete([FromBody] DeleteUserDTO request)
     {
         if (request.Id == null || request.Id == 0) 
         {
@@ -239,6 +226,5 @@ public class UsersController : ControllerBase
         {
             return Problem(e.Message); 
         }
-        
     }
 }

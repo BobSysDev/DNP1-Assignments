@@ -1,0 +1,123 @@
+﻿@page "/DisplayCommentsByParentId"
+@using BlazorApp.Services
+@using DTOs
+@attribute [StreamRendering]
+@inject ICommentService CommentService
+@inject IUserService UserService
+@rendermode InteractiveServer
+
+<h3>DisplayCommentsByParentId - testing</h3>
+<p>Enter the post ID of the post of which you'd like to view comments of: </p>
+<InputText @bind-Value="idBox"></InputText>
+<button @onclick="DisplayComments">Test!</button>
+
+@if (dtos != null && UsersBoundToComments != null)
+{
+    foreach (var dto in dtos)
+    {
+        <ul>
+            @PrintCommentCascade(dto)
+        </ul>
+    }
+}
+
+
+@code {
+    private string idBox { get; set; } = "";
+    private List<CommentDTO>? dtos { get; set; }
+    private Dictionary<CommentDTO, string>? UsersBoundToComments { get; set; }
+
+    private RenderFragment PrintCommentCascade(CommentDTO comment)
+    {
+        return
+            @<li>
+                <div class="@comment.Id">
+                    <p>By: @(UsersBoundToComments[comment])</p>
+                    <p>Likes: @comment.Likes | <button @onclick="() => LikeComment(comment.Id)">Like</button> | <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | <button @onclick="() => DeleteComment(comment.Id)">Delete</button></p>
+                    <p>
+                        <b>@comment.Body</b>
+                    </p>
+                    <ul>
+                        @if (comment.Children.Count > 0)
+                        {
+                            foreach (var child in comment.Children)
+                            {
+                                @PrintCommentCascade(child)
+                            }
+                        }
+                    </ul>
+                </div>
+            </li>;
+    }
+
+    private async Task DisplayComments()
+    {
+        dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
+        UsersBoundToComments = new Dictionary<CommentDTO, string>();
+        foreach (var comment in dtos)
+        {
+            await AssignUsersCascade(comment);
+        }
+        StateHasChanged();
+    }
+
+    private async Task AssignUsersCascade(CommentDTO comment)
+    {
+        var authorUsername = await GetUsernameByUserId(comment.UserId);
+        UsersBoundToComments.Add(comment, authorUsername);
+        
+        if (comment.Children.Count > 0)
+        {
+            foreach (var child in comment.Children)
+            {
+                await AssignUsersCascade(child);
+            }
+        }
+    }
+
+    private async Task LikeComment(string id)
+    {
+        await CommentService.LikeCommentAsync(id);
+        FindACommentDtoById(dtos, id).Likes++;
+        StateHasChanged();
+    }
+
+    private async Task DislikeComment(string id)
+    {
+        FindACommentDtoById(dtos, id).Likes--;
+        await CommentService.DislikeCommentAsync(id);
+        StateHasChanged();
+    }
+    
+    private async Task DeleteComment(string id)
+    {
+        await CommentService.DeleteCommentAsync(id);
+        dtos = null;
+        await DisplayComments();
+        StateHasChanged();
+    }
+
+    private CommentDTO? FindACommentDtoById(List<CommentDTO> listToSearch, string id)
+    {
+        foreach (var item in listToSearch)
+        {
+            if (item.Id == id)
+            {
+                return item;
+            }
+            if (item.Children.Count > 0)
+            {
+                return FindACommentDtoById(item.Children, id);
+            }
+        }
+
+        return null;
+    }
+
+    private async Task<string> GetUsernameByUserId(int id)
+    {
+        PublicUserDTO dto = await UserService.GetUserById(id);
+        String username = dto.Username;
+        return username;
+    }
+}
