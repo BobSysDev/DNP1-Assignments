@@ -4,6 +4,7 @@
 @attribute [StreamRendering]
 @inject ICommentService CommentService
 @inject IUserService UserService
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <h3>DisplayCommentsByParentId - testing</h3>
@@ -11,7 +12,7 @@
 <InputText @bind-Value="idBox"></InputText>
 <button @onclick="DisplayComments">Test!</button>
 
-@if (dtos != null && UsersBoundToComments != null)
+@if (dtos != null && users != null)
 {
     foreach (var dto in dtos)
     {
@@ -25,7 +26,7 @@
 @code {
     private string idBox { get; set; } = "";
     private List<CommentDTO>? dtos { get; set; }
-    private Dictionary<CommentDTO, string>? UsersBoundToComments { get; set; }
+    private List<PublicUserDTO>? users { get; set; }
     private string editedCommentId = "";
     private string editedCommentBody;
 
@@ -34,10 +35,11 @@
         return
             @<li>
                 <div class="@comment.Id">
-                    <p>By: @(UsersBoundToComments[comment])</p>
+                    <p>By: @(users.Find(user => user.Id == comment.UserId).Username)</p>
                     <p>Likes: @comment.Likes | 
                         <button @onclick="() => LikeComment(comment.Id)">Like</button> | 
                         <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | 
+                        <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> | 
                         <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
                         <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
                     </p>
@@ -72,26 +74,8 @@
     private async Task DisplayComments()
     {
         dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
-        UsersBoundToComments = new Dictionary<CommentDTO, string>();
-        foreach (var comment in dtos)
-        {
-            await AssignUsersCascade(comment);
-        }
+        users = await UserService.GetAll();
         StateHasChanged();
-    }
-
-    private async Task AssignUsersCascade(CommentDTO comment)
-    {
-        var authorUsername = await GetUsernameByUserId(comment.UserId);
-        UsersBoundToComments.Add(comment, authorUsername);
-        
-        if (comment.Children.Count > 0)
-        {
-            foreach (var child in comment.Children)
-            {
-                await AssignUsersCascade(child);
-            }
-        }
     }
 
     private async Task LikeComment(string id)
@@ -166,5 +150,10 @@
         editedCommentId = "";
         editedCommentBody = "";
         await DisplayComments();
-    } 
+    }
+
+    private void CommentUnderComment(string commentId)
+    {
+        NavigationManager.NavigateTo($"/Comment/{commentId}/CreateComment");
+    }
 }

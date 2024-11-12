@@ -28,10 +28,10 @@ public class HttpUserService : IUserService
         })!;
     }
 
-    public async Task<List<UserDTO>> GetAll()
+    public async Task<List<PublicUserDTO>> GetAll()
     {
-        var response = await client.GetFromJsonAsync<List<UserDTO>>("/Users");
-        return response ?? new List<UserDTO>();
+        var response = await client.GetFromJsonAsync<List<PublicUserDTO>>("/Users");
+        return response ?? new List<PublicUserDTO>();
     }
 
     public async Task<PublicUserDTO> GetUserById(int id)
