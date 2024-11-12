@@ -1,26 +1,19 @@
 using BlazorApp.Components;
-using BlazorApp.Services;
+using BlazorApp.Components.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register IUserService with HttpUserService as its implementation
 builder.Services.AddScoped<IUserService, HttpUserService>();
-
+builder.Services.AddScoped<ICommentService, HttpCommentService>();
+builder.Services.AddScoped<IPostService, HttpPostService>();
 
 builder.Services.AddScoped(sp => new HttpClient
 {
     BaseAddress = new Uri("https://quickshift.electimore.xyz")
 });
 
-// Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-
-builder.Services.AddScoped(sp => new HttpClient
-{
-    BaseAddress = new Uri("https://quickshift.electimore.xyz")
-});
-builder.Services.AddScoped<ICommentService, HttpCommentService>();
 
 var app = builder.Build();
 
