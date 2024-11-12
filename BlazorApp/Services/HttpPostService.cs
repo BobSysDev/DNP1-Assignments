@@ -1,7 +1,7 @@
 ﻿
 using Entities;
 
-namespace BlazorApp.Components.Services;
+namespace BlazorApp.Services;
 
 public class HttpPostService : IPostService
 {

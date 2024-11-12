@@ -8,7 +8,7 @@ public interface ICommentService
 
     public Task<CommentDTO> GetSingleCommentByIdAsync(string id);
     
-    public Task<CommentDTO> UpdateCommentAsync(UpdateCommentDTO dto);
+    public Task<CommentDTO> UpdateCommentAsync(string id, UpdateCommentDTO dto);
 
     public Task DeleteCommentAsync(string id);
 

@@ -1,6 +1,6 @@
 ﻿using Entities;
 
-namespace BlazorApp.Components.Services;
+namespace BlazorApp.Services;
 
 public interface IPostService
 {

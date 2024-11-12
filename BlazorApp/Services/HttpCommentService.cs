@@ -56,9 +56,9 @@ public class HttpCommentService : ICommentService
         throw new Exception("No data to deserialize.");
     }
 
-    public async Task<CommentDTO> UpdateCommentAsync(UpdateCommentDTO dto)
+    public async Task<CommentDTO> UpdateCommentAsync(string id, UpdateCommentDTO dto)
     {
-        HttpResponseMessage httpResponse = await client.PatchAsJsonAsync("Comment", dto);
+        HttpResponseMessage httpResponse = await client.PatchAsJsonAsync($"Comment/{id}", dto);
         string response = await httpResponse.Content.ReadAsStringAsync();
         if (!httpResponse.IsSuccessStatusCode)
         {

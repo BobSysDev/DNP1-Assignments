@@ -14,11 +14,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Auth/SimpleAuthProvider.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditComment.razor" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Login.razor" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Server/WebAPI/Controllers/AuthController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Shared/DTOs/AuthUserDTO.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/BlazorApp.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/BlazorApp.csproj" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Home.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Home.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Routes.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Routes.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Services/HttpPostService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpPostService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Services/IPostService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/IPostService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/_Imports.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/_Imports.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpCommentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpCommentService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/ICommentService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/ICommentService.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +41,11 @@
     <option name="autoShow" value="false" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="comments-blazor" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
@@ -67,7 +84,7 @@
     &quot;.NET Launch Settings Profile.WebAPI: https.executor&quot;: &quot;Run&quot;,
     &quot;.NET Project.CLI.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;comments-blazor&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;auth-implementation&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -200,6 +217,9 @@
       <workItem from="1731175144394" duration="637000" />
       <workItem from="1731276847087" duration="144000" />
       <workItem from="1731277002622" duration="1905000" />
+      <workItem from="1731403957183" duration="5938000" />
+      <workItem from="1731412089029" duration="43000" />
+      <workItem from="1731412143389" duration="2609000" />
     </task>
     <servers />
   </component>
@@ -208,6 +228,17 @@
   </component>
   <component name="UnityCheckinConfiguration" checkUnsavedScenes="false" />
   <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />

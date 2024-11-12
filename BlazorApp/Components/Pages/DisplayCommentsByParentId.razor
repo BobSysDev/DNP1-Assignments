@@ -26,6 +26,8 @@
     private string idBox { get; set; } = "";
     private List<CommentDTO>? dtos { get; set; }
     private Dictionary<CommentDTO, string>? UsersBoundToComments { get; set; }
+    private string editedCommentId = "";
+    private string editedCommentBody;
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {
@@ -33,10 +35,27 @@
             @<li>
                 <div class="@comment.Id">
                     <p>By: @(UsersBoundToComments[comment])</p>
-                    <p>Likes: @comment.Likes | <button @onclick="() => LikeComment(comment.Id)">Like</button> | <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | <button @onclick="() => DeleteComment(comment.Id)">Delete</button></p>
-                    <p>
-                        <b>@comment.Body</b>
+                    <p>Likes: @comment.Likes | 
+                        <button @onclick="() => LikeComment(comment.Id)">Like</button> | 
+                        <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | 
+                        <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
+                        <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
                     </p>
+                    @if (comment.Id == editedCommentId)
+                    {
+                        <p>
+                            <InputText @bind-Value="editedCommentBody"></InputText>
+                            <button @onclick="EditCommentCancel">Cancel</button> | 
+                            <button @onclick="EditCommentCommit">Submit</button>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <b>@comment.Body</b>
+                        </p>
+                    }
+                    
                     <ul>
                         @if (comment.Children.Count > 0)
                         {
@@ -120,4 +139,32 @@
         String username = dto.Username;
         return username;
     }
+
+    private void EditCommentBegin(string id)
+    {
+        editedCommentId = id;
+        editedCommentBody = FindACommentDtoById(dtos, id).Body;
+        StateHasChanged();
+    }
+
+    private void EditCommentCancel()
+    {
+        editedCommentId = "";
+        StateHasChanged();
+    }
+
+    private async Task EditCommentCommit()
+    {
+        CommentDTO editedComment = FindACommentDtoById(dtos, editedCommentId);
+        var dto = new UpdateCommentDTO
+        {
+            Body = editedCommentBody,
+            UserId = editedComment.UserId
+        };
+        Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
+        await CommentService.UpdateCommentAsync(editedCommentId, dto);
+        editedCommentId = "";
+        editedCommentBody = "";
+        await DisplayComments();
+    } 
 }
