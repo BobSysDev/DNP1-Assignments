@@ -48,7 +48,7 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/BobSysDev/DNP1-Assignments.git&quot;,
-    &quot;accountId&quot;: &quot;55c8966d-bb7e-4438-ad82-d84dd6128bab&quot;
+    &quot;accountId&quot;: &quot;fe069e69-e1bf-40f2-984c-8c24a84749a3&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
@@ -63,7 +63,9 @@
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2o3iiplZHpDhU2290cqtnZcJGx8" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
