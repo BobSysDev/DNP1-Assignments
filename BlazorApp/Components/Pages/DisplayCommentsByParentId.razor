@@ -23,11 +23,21 @@
 
 
 @code {
+    [Parameter] public string PostId { get; set; }
     private string idBox { get; set; } = "";
     private List<CommentDTO>? dtos { get; set; }
     private Dictionary<CommentDTO, string>? UsersBoundToComments { get; set; }
     private string editedCommentId = "";
     private string editedCommentBody;
+    
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(PostId))
+        {
+         idBox = PostId;
+         await DisplayComments();
+        }
+    }
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {

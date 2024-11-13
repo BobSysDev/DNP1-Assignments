@@ -15,7 +15,7 @@
   <component name="ChangeListManager">
     <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditComment.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditComment.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,12 +40,12 @@
     &quot;assignee&quot;: &quot;SebinoBR&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/BobSysDev/DNP1-Assignments.git",
-    "accountId": "fe069e69-e1bf-40f2-984c-8c24a84749a3"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/BobSysDev/DNP1-Assignments.git&quot;,
+    &quot;accountId&quot;: &quot;fe069e69-e1bf-40f2-984c-8c24a84749a3&quot;
   }
-}]]></component>
+}</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c439425da351c75ac7d966a1cc8324b51a9c471865af79d2f2f3fcb65e392/HttpClient.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
@@ -208,7 +208,17 @@
       <workItem from="1731403957183" duration="5938000" />
       <workItem from="1731412089029" duration="43000" />
       <workItem from="1731412143389" duration="2609000" />
+      <workItem from="1731482735180" duration="2289000" />
     </task>
+    <task id="LOCAL-00001" summary="posts stuff date 12-11-2024">
+      <option name="closed" value="true" />
+      <created>1731418313204</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731418313204</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,6 +240,7 @@
   <component name="VcsManagerConfiguration">
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="posts stuff date 12-11-2024" />
+    <option name="LAST_COMMIT_MESSAGE" value="posts stuff date 12-11-2024" />
   </component>
 </project>
