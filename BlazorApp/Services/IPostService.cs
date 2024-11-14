@@ -7,7 +7,7 @@ public interface IPostService
 {
     Task<PostDTO> GetPostByIdAsync(string postId);
     Task<IEnumerable<PostDTO>> GetAllPostsAsync();
-    Task AddPostAsync(PostDTO postDto);
+    Task AddPostAsync(CreatePostDTO postDto);
     Task<PostDTO> UpdatePostAsync(string postId, CreatePostDTO postDto);
     Task DeletePostAsync(string postId);
 }

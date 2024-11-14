@@ -24,7 +24,7 @@ public class HttpPostService : IPostService
         return await _httpClient.GetFromJsonAsync<IEnumerable<PostDTO>>("posts");
     }
 
-    public async Task AddPostAsync(PostDTO postDto)
+    public async Task AddPostAsync(CreatePostDTO postDto)
     {
         await _httpClient.PostAsJsonAsync("posts", postDto);
     }

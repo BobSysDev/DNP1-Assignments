@@ -29,7 +29,8 @@ public class PostsController
         {
             Title = postDto.Title,
             Body = postDto.Body,
-            UserId = postDto.UserId
+            UserId = postDto.UserId,
+            Likes = 0
         };
 
         Post createdPost = await _postRepository.AddAsync(newPost);
