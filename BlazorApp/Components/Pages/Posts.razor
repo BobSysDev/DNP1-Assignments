@@ -1,5 +1,4 @@
 ﻿@page "/Posts"
-@page "/Posts/{PostIdFromRoute}"
 @using BlazorApp.Services
 @using DTOs
 @using Entities
@@ -9,10 +8,6 @@
 <div class="container mt-4">
     <h3 class="text-center">Posts</h3>
     
-    @if (PostIdFromRoute != null)
-    {
-        @(selectedPost = getPostDtoById(PostIdFromRoute))
-    }
     @if (isCreating)
     {
         <div class="card mt-4">
@@ -34,25 +29,6 @@
                     <button type="submit" class="btn btn-primary">Create</button>
                     <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
                 </EditForm>
-            </div>
-        </div>
-    }
-    else if (selectedPost != null)
-    {
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>@selectedPost.Title</h4>
-            </div>
-            <div class="card-body">
-                <p>@selectedPost.Body</p>
-            </div>
-
-            <div>
-                <DisplayCommentsByParentId PostId="@selectedPost.PostId"/> 
-            </div>
-
-            <div>
-                <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
             </div>
         </div>
     }
@@ -84,9 +60,6 @@
 </div>
 
 @code {
-
-    [Parameter] public string? PostIdFromRoute { get; set; }
-    
     private IEnumerable<Post> posts;
     private Post newPost = new Post();
     private Post selectedPost;
@@ -94,6 +67,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("Loading posts...");
         posts = await PostService.GetAllPostsAsync();
     }
 
