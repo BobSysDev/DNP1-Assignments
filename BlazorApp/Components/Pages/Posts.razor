@@ -1,0 +1,147 @@
+﻿@page "/Posts"
+@using System.Security.Claims
+@using BlazorApp.Services
+@using DTOs
+@using Entities
+@inject IPostService PostService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
+
+<div class="container mt-4">
+    <h3 class="text-center">Posts</h3>
+
+    <AuthorizeView>
+        <NotAuthorized>
+            <p class="mt-4" style="color: red">You must be logged in to create a post. Please <a href="/Login">log in</a>.</p>
+            @if (posts == null)
+            {
+            <p class="mt-4">
+                <em>Loading...</em>
+            </p>
+            }
+            else if (!posts.Any())
+            {
+            <p class="mt-4">No posts available.</p>
+            }
+            else
+            {
+            <ul class="list-group mt-4">
+                @foreach (var PostDTO in posts)
+                {
+                <li class="list-group-item">
+                    <a href="#" @onclick="() => RedirectToPost(PostDTO.Id)" @onclick:preventDefault="true">@PostDTO.Title</a>
+                </li>
+                }
+            </ul>
+            }
+        </NotAuthorized>
+
+        <Authorized Context="authorizedUser">
+            @if (isCreating)
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>Create New Post</h4>
+                    </div>
+                    <div class="card-body">
+                        <EditForm Model="newPost" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+                            <div class="mb-3">
+                                <label class="form-label">Title:</label>
+                                <InputText class="form-control" @bind-Value="newPost.Title" />
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Content:</label>
+                                <InputTextArea class="form-control" @bind-Value="newPost.Body" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
+                        </EditForm>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <button class="btn btn-primary mt-4" @onclick="ShowCreateForm">Create New Post</button>
+            }
+
+            @if (posts == null)
+            {
+                <p class="mt-4">
+                    <em>Loading...</em>
+                </p>
+            }
+            else if (!posts.Any())
+            {
+                <p class="mt-4">No posts available.</p>
+            }
+            else
+            {
+                <ul class="list-group mt-4">
+                    @foreach (var PostDTO in posts)
+                    {
+                        <li class="list-group-item">
+                            <a href="#" @onclick="() => RedirectToPost(PostDTO.Id)" @onclick:preventDefault="true">@PostDTO.Title</a>
+                        </li>
+                    }
+                </ul>
+            }
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    private IEnumerable<PostDTO> posts;
+    private CreatePostDTO newPost = new CreatePostDTO();
+    private bool isCreating = false;
+    
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int loggedInUserId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthProvider.GetAuthenticationStateAsync();
+        posts = await PostService.GetAllPostsAsync();
+        await RefreshAuthCredentials();
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        newPost.UserId = loggedInUserId;
+        await PostService.AddPostAsync(newPost);
+        newPost = new CreatePostDTO();
+        posts = await PostService.GetAllPostsAsync();
+        isCreating = false;
+    }
+
+    private void ShowCreateForm()
+    {
+        isCreating = true;
+    }
+
+    private void CancelCreate()
+    {
+        isCreating = false;
+    }
+
+    private void RedirectToPost(string postId)
+    {
+        Console.WriteLine(postId);
+        Navigation.NavigateTo($"/Posts/{postId}");
+    }
+    
+    private async Task RefreshAuthCredentials()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        loggedInUserId = int.Parse(userIdAsString);
+    }
+}

@@ -1,0 +1,52 @@
+﻿@page "/debug/addcomments"
+@using BlazorApp.Services
+@using DTOs
+@attribute [StreamRendering]
+@inject ICommentService CommentService
+@rendermode InteractiveServer
+
+<h3>AddComment</h3>
+<EditForm Model="@createDto" OnSubmit="@AddSingleComment">
+    <div style="margin-bottom: 10px;">
+        <div>Parent ID: </div>
+        <InputText @bind-Value="createDto.ParentId" />
+    </div>
+    <div style="margin-bottom: 10px;">
+        <div>Your user ID: </div>
+        <InputNumber @bind-Value="createDto.UserId" />
+    </div>
+    <div style="margin-bottom: 10px;">
+        <div>Comment body: </div>
+        <InputTextArea @bind-Value="createDto.Body"></InputTextArea>
+    </div>
+    <button class="btn btn-primary" type="submit">Create new comment</button>
+</EditForm>
+
+@if (resultDto == null)
+{
+    <h3>The data will be displayed here after you submit a comment...</h3>
+}
+else
+{
+    <div>
+        <h3>Your created comment: </h3>
+        <p>Author ID: @resultDto.UserId</p>
+        <p>Parent ID: @resultDto.ParentId</p>
+        <p>Server-assigned comment ID: @resultDto.Id</p>
+        <p>Likes: @resultDto.Likes</p>
+        <p>Content of the comment: </p>
+        <p>@resultDto.Body</p>
+    </div>
+}
+
+@code {
+    private CreateCommentDTO createDto { get; set; } = new CreateCommentDTO();
+    private CommentDTO? resultDto;
+    private bool showReturnComment;
+    
+    private async Task AddSingleComment()
+    {
+        resultDto = await CommentService.CreateCommentAsync(createDto);
+    }
+}
+

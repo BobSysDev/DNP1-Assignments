@@ -1,0 +1,58 @@
+﻿@page "/Posts/{ParentIdFromRoute}/CreateComment"
+@using System.Security.Claims
+@using BlazorApp.Services
+@using DTOs
+@attribute [StreamRendering]
+@inject ICommentService CommentService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@attribute [Authorize]
+
+<h3>Create a new comment under a post</h3>
+<EditForm Model="@createDto" OnSubmit="@AddSingleComment">
+    <div style="margin-bottom: 10px;">
+        <div>Commenting as: @loggedInUserName</div>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <div>Comment body: </div>
+        <InputTextArea @bind-Value="createDto.Body"></InputTextArea>
+    </div>
+    <button class="btn btn-primary" type="submit">Create new comment</button>
+</EditForm>
+
+@code {
+    [Parameter] public string? ParentIdFromRoute { get; set; }
+    private CreateCommentDTO createDto { get; set; } = new CreateCommentDTO();
+    
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int loggedInUserId;
+    private string? loggedInUserName;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshAuthCredentials();
+    }
+    
+    private async Task AddSingleComment()
+    {
+        createDto.ParentId = ParentIdFromRoute;
+        createDto.UserId = loggedInUserId;
+        await CommentService.CreateCommentAsync(createDto);
+        NavigationManager.NavigateTo($"/Posts/{ParentIdFromRoute}");
+    }
+    
+    private async Task RefreshAuthCredentials()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        loggedInUserId = int.Parse(userIdAsString);
+        loggedInUserName = claims.Single(c => c.Type == ClaimTypes.Name).Value;
+    }
+}

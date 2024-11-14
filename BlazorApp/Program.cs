@@ -1,8 +1,21 @@
 using BlazorApp.Components;
+using BlazorApp.Components.Auth;
+using BlazorApp.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddScoped<IUserService, HttpUserService>();
+builder.Services.AddScoped<ICommentService, HttpCommentService>();
+builder.Services.AddScoped<IPostService, HttpPostService>();
+builder.Services.AddScoped<AuthenticationStateProvider, SimpleAuthProvider>();
+
+builder.Services.AddScoped(sp => new HttpClient
+{
+    // BaseAddress = new Uri("https://quickshift.electimore.xyz")
+    BaseAddress = new Uri("http://localhost:5070")
+});
+
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
