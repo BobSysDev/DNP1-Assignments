@@ -2,13 +2,15 @@
 @using System.Security.Claims
 @using BlazorApp.Services
 @using DTOs
+@attribute [StreamRendering]
 @inject IUserService UserService
-@attribute [Authorize]
+@rendermode InteractiveServer
+
+
+<h3 class="text-primary mb-4">User Management</h3>
 
 <AuthorizeView>
     <NotAuthorized>
-        <h3 class="text-primary mb-4">User Management</h3>
-
         @if (testResultMessage != null)
         {
             <div class="alert @testResultCss" role="alert">
@@ -47,79 +49,79 @@
     <Authorized>
         <p>You already have an account @context.User.Identity.Name</p>
     </Authorized>
-    
+
 </AuthorizeView>
 
-        @code {
-            private string username;
-            private string password;
-            private string? testResultMessage;
-            private string testResultCss = "alert-secondary";
-            private List<PublicUserDTO> users = new();
+@code {
+    private string username;
+    private string password;
+    private string? testResultMessage;
+    private string testResultCss = "alert-secondary";
+    private List<PublicUserDTO> users = new();
 
-            [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
 
 
-            protected override async Task OnInitializedAsync()
-            {
-                AuthenticationState authenticationState = await State;
-                ClaimsPrincipal claimsPrincipal = authenticationState.User;
-                if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
-                {
-                    // the user is not logged in 
-                    return;
-                }
-
-                string? userName = claimsPrincipal.Identity?.Name;
-                IEnumerable<Claim> claims = claimsPrincipal.Claims;
-                string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
-                int userId = int.Parse(userIdAsString);
-            }
-
-            private async Task AddUser()
-            {
-                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                {
-                    testResultMessage = "Username and password are required.";
-                    testResultCss = "alert-danger";
-                    return;
-                }
-
-                var sampleUser = new CreateUserDTO
-                {
-                    Username = username,
-                    Password = password
-                };
-
-                try
-                {
-                    var addedUser = await UserService.AddUserAsync(sampleUser);
-                    testResultMessage = $"Success! User '{addedUser.Username}' added with ID {addedUser.Id}.";
-                    testResultCss = "alert-success";
-
-                    username = string.Empty;
-                    password = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    testResultMessage = $"Failed! Error: {ex.Message}";
-                    testResultCss = "alert-danger";
-                }
-            }
-
-            private async Task ViewAllUsers()
-            {
-                try
-                {
-                    users = await UserService.GetAll();
-                    testResultMessage = $"{users.Count} user(s) retrieved successfully.";
-                    testResultCss = "alert-success";
-                }
-                catch (Exception ex)
-                {
-                    testResultMessage = $"Failed to retrieve users. Error: {ex.Message}";
-                    testResultCss = "alert-danger";
-                }
-            }
-
+    protected override async Task OnInitializedAsync()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            // the user is not logged in 
+            return;
         }
+    
+        string? userName = claimsPrincipal.Identity?.Name;
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        int userId = int.Parse(userIdAsString);
+    }
+
+    private async Task AddUser()
+    {
+        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+        {
+            testResultMessage = "Username and password are required.";
+            testResultCss = "alert-danger";
+            return;
+        }
+
+        var sampleUser = new CreateUserDTO
+        {
+            Username = username,
+            Password = password
+        };
+
+        try
+        {
+            var addedUser = await UserService.AddUserAsync(sampleUser);
+            testResultMessage = $"Success! User '{addedUser.Username}' added with ID {addedUser.Id}.";
+            testResultCss = "alert-success";
+
+            username = string.Empty;
+            password = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            testResultMessage = $"Failed! Error: {ex.Message}";
+            testResultCss = "alert-danger";
+        }
+    }
+
+    private async Task ViewAllUsers()
+    {
+        try
+        {
+            users = await UserService.GetAll();
+            testResultMessage = $"{users.Count} user(s) retrieved successfully.";
+            testResultCss = "alert-success";
+        }
+        catch (Exception ex)
+        {
+            testResultMessage = $"Failed to retrieve users. Error: {ex.Message}";
+            testResultCss = "alert-danger";
+        }
+    }
+
+}
