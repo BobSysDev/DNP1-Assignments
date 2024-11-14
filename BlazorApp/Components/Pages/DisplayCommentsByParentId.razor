@@ -1,4 +1,5 @@
 ﻿@page "/DisplayCommentsByParentId"
+@using System.Security.Claims
 @using BlazorApp.Services
 @using DTOs
 @attribute [StreamRendering]
@@ -6,17 +7,18 @@
 @inject IUserService UserService
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@attribute [Authorize]
 
 @* <h3>DisplayCommentsByParentId - testing</h3> *@
 @* <p>Enter the post ID of the post of which you'd like to view comments of: </p> *@
 @* <InputText @bind-Value="idBox"></InputText> *@
 @* <button @onclick="DisplayComments">Test!</button> *@
-
-<p>
-    <h5>Comments: </h5>
-    <button @onclick="CreateNewCommentUnderPost">Create new</button>
-</p>
-
+<AuthorizeView>
+    <Authorized>
+            <h5>Comments: </h5>
+            <p><button @onclick="CreateNewCommentUnderPost">Create new</button></p>
+    </Authorized>
+</AuthorizeView>
 @if (dtos != null && users != null)
 {
     foreach (var dto in dtos)
@@ -35,6 +37,8 @@
     private List<PublicUserDTO>? users { get; set; }
     private string editedCommentId = "";
     private string editedCommentBody;
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int loggedInUserId;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -50,28 +54,39 @@
         return @<li>
             <div class="@comment.Id">
                 <p>By: @(users.Find(user => user.Id == comment.UserId)?.Username ?? "Unknown")</p>
-                <p>
-                    Likes: @comment.Likes |
-                    <button @onclick="() => LikeComment(comment.Id)">Like</button> |
-                    <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> |
-                    <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> |
-                    <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
-                    <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
-                </p>
-                @if (comment.Id == editedCommentId)
-                {
-                    <p>
-                        <InputText @bind-Value="editedCommentBody"></InputText>
-                        <button @onclick="EditCommentCancel">Cancel</button> |
-                        <button @onclick="EditCommentCommit">Submit</button>
+                    <p>Likes: @comment.Likes 
+                        <AuthorizeView>
+                            <Authorized>
+                                | <button @onclick="() => LikeComment(comment.Id)">Like</button> | 
+                                <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | 
+                                <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button>
+                                @if (loggedInUserId == comment.UserId)
+                                {
+                                    <span> | </span><button @onclick="() => EditCommentBegin(comment.Id)">Edit</button>
+                                    <span> | </span><button @onclick="() => DeleteComment(comment.Id)">Delete</button>
+                                }
+                                
+                            </Authorized>
+                            <NotAuthorized>
+                                | You have to be logged in to interact with comments.
+                            </NotAuthorized>
+                        </AuthorizeView> 
+                        
                     </p>
-                }
-                else
-                {
-                    <p>
-                        <b>@comment.Body</b>
-                    </p>
-                }
+                    @if (comment.Id == editedCommentId)
+                    {
+                        <p>
+                            <InputText @bind-Value="editedCommentBody"></InputText>
+                            <button @onclick="EditCommentCancel">Cancel</button> | 
+                            <button @onclick="EditCommentCommit">Submit</button>
+                        </p>
+                    }
+                    else
+                    {
+                        <p>
+                            <b>@comment.Body</b>
+                        </p>
+                    }
 
                 <ul>
                     @if (comment.Children?.Any() == true)
@@ -86,17 +101,31 @@
         </li>;
     }
 
-
     private async Task DisplayComments()
     {
         if (dtos == null || users == null)
         {
+            await RefreshAuthCredentials();
             dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
             users = await UserService.GetAll();
             StateHasChanged();
         }
     }
 
+    private async Task RefreshAuthCredentials()
+    {
+        Console.WriteLine("Refreshing auth creds");
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        loggedInUserId = int.Parse(userIdAsString);
+    }
 
     private async Task LikeComment(string id)
     {
@@ -149,35 +178,33 @@
             return username;
         }
 
-        private void EditCommentBegin(string id)
-        {
-            Console.WriteLine("Editing a comment...");
-            Console.WriteLine(dtos.Count);
-            editedCommentId = id;
-            editedCommentBody = FindACommentDtoById(dtos, id).Body;
-            StateHasChanged();
-        }
+    private void EditCommentBegin(string id)
+    {
+        editedCommentId = id;
+        editedCommentBody = FindACommentDtoById(dtos, id).Body;
+        StateHasChanged();
+    }
 
-        private void EditCommentCancel()
-        {
-            editedCommentId = "";
-            StateHasChanged();
-        }
+    private void EditCommentCancel()
+    {
+        editedCommentId = "";
+        StateHasChanged();
+    }
 
-        private async Task EditCommentCommit()
+    private async Task EditCommentCommit()
+    {
+        CommentDTO editedComment = FindACommentDtoById(dtos, editedCommentId);
+        var dto = new UpdateCommentDTO
         {
-            CommentDTO editedComment = FindACommentDtoById(dtos, editedCommentId);
-            var dto = new UpdateCommentDTO
-            {
-                Body = editedCommentBody,
-                UserId = editedComment.UserId
-            };
-            Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
-            await CommentService.UpdateCommentAsync(editedCommentId, dto);
-            editedCommentId = "";
-            editedCommentBody = "";
-            await DisplayComments();
-        }
+            Body = editedCommentBody,
+            UserId = editedComment.UserId
+        };
+        Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
+        await CommentService.UpdateCommentAsync(editedCommentId, dto);
+        editedCommentId = "";
+        editedCommentBody = "";
+        await DisplayComments();
+    }
 
         private void CommentUnderComment(string commentId)
         {
