@@ -1,93 +1,125 @@
 @page "/User"
+@using System.Security.Claims
 @using BlazorApp.Services
 @using DTOs
 @inject IUserService UserService
+@attribute [Authorize]
 
-<h3 class="text-primary mb-4">User Management</h3>
+<AuthorizeView>
+    <NotAuthorized>
+        <h3 class="text-primary mb-4">User Management</h3>
 
-@if (testResultMessage != null)
-{
-    <div class="alert @testResultCss" role="alert">
-        @testResultMessage
-    </div>
-}
-
-<div class="mb-3">
-    <label for="username" class="form-label">Username</label>
-    <input type="text" id="username" @bind="@username" class="form-control" placeholder="Enter username" />
-</div>
-
-<div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input type="password" id="password" @bind="@password" class="form-control" placeholder="Enter password" />
-</div>
-
-<div class="d-flex justify-content-start gap-2 mb-3">
-    <button class="btn btn-outline-primary" @onclick="AddUser">Add User</button>
-    <button class="btn btn-outline-secondary" @onclick="ViewAllUsers">View All Users</button>
-</div>
-
-@if (users != null && users.Count > 0)
-{
-    <h4 class="mt-4">All Users</h4>
-    <ul class="list-group">
-        @foreach (var user in users)
+        @if (testResultMessage != null)
         {
-            <li class="list-group-item">@user.Username (ID: @user.Id)</li>
-        }
-    </ul>
-}
-
-@code {
-    private string username;
-    private string password;
-    private string? testResultMessage;
-    private string testResultCss = "alert-secondary";
-    private List<PublicUserDTO> users = new();
-
-    private async Task AddUser()
-    {
-        if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-        {
-            testResultMessage = "Username and password are required.";
-            testResultCss = "alert-danger";
-            return;
+            <div class="alert @testResultCss" role="alert">
+                @testResultMessage
+            </div>
         }
 
-        var sampleUser = new CreateUserDTO
-        {
-            Username = username,
-            Password = password
-        };
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" id="username" @bind="@username" class="form-control" placeholder="Enter username"/>
+        </div>
 
-        try
-        {
-            var addedUser = await UserService.AddUserAsync(sampleUser);
-            testResultMessage = $"Success! User '{addedUser.Username}' added with ID {addedUser.Id}.";
-            testResultCss = "alert-success";
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" id="password" @bind="@password" class="form-control" placeholder="Enter password"/>
+        </div>
 
-            username = string.Empty;
-            password = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            testResultMessage = $"Failed! Error: {ex.Message}";
-            testResultCss = "alert-danger";
-        }
-    }
+        <div class="d-flex justify-content-start gap-2 mb-3">
+            <button class="btn btn-outline-primary" @onclick="AddUser">Add User</button>
+            <button class="btn btn-outline-secondary" @onclick="ViewAllUsers">View All Users</button>
+        </div>
 
-    private async Task ViewAllUsers()
-    {
-        try
+        @if (users != null && users.Count > 0)
         {
-            users = await UserService.GetAll();
-            testResultMessage = $"{users.Count} user(s) retrieved successfully.";
-            testResultCss = "alert-success";
+            <h4 class="mt-4">All Users</h4>
+            <ul class="list-group">
+                @foreach (var user in users)
+                {
+                    <li class="list-group-item">@user.Username (ID: @user.Id)</li>
+                }
+            </ul>
         }
-        catch (Exception ex)
-        {
-            testResultMessage = $"Failed to retrieve users. Error: {ex.Message}";
-            testResultCss = "alert-danger";
+
+    </NotAuthorized>
+
+    <Authorized>
+        <p>You already have an account @context.User.Identity.Name</p>
+    </Authorized>
+    
+</AuthorizeView>
+
+        @code {
+            private string username;
+            private string password;
+            private string? testResultMessage;
+            private string testResultCss = "alert-secondary";
+            private List<PublicUserDTO> users = new();
+
+            [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+
+
+            protected override async Task OnInitializedAsync()
+            {
+                AuthenticationState authenticationState = await State;
+                ClaimsPrincipal claimsPrincipal = authenticationState.User;
+                if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+                {
+                    // the user is not logged in 
+                    return;
+                }
+
+                string? userName = claimsPrincipal.Identity?.Name;
+                IEnumerable<Claim> claims = claimsPrincipal.Claims;
+                string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+                int userId = int.Parse(userIdAsString);
+            }
+
+            private async Task AddUser()
+            {
+                if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                {
+                    testResultMessage = "Username and password are required.";
+                    testResultCss = "alert-danger";
+                    return;
+                }
+
+                var sampleUser = new CreateUserDTO
+                {
+                    Username = username,
+                    Password = password
+                };
+
+                try
+                {
+                    var addedUser = await UserService.AddUserAsync(sampleUser);
+                    testResultMessage = $"Success! User '{addedUser.Username}' added with ID {addedUser.Id}.";
+                    testResultCss = "alert-success";
+
+                    username = string.Empty;
+                    password = string.Empty;
+                }
+                catch (Exception ex)
+                {
+                    testResultMessage = $"Failed! Error: {ex.Message}";
+                    testResultCss = "alert-danger";
+                }
+            }
+
+            private async Task ViewAllUsers()
+            {
+                try
+                {
+                    users = await UserService.GetAll();
+                    testResultMessage = $"{users.Count} user(s) retrieved successfully.";
+                    testResultCss = "alert-success";
+                }
+                catch (Exception ex)
+                {
+                    testResultMessage = $"Failed to retrieve users. Error: {ex.Message}";
+                    testResultCss = "alert-danger";
+                }
+            }
+
         }
-    }
-}
