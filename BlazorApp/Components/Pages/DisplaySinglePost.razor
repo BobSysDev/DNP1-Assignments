@@ -1,0 +1,44 @@
+﻿@page "/Posts/{PostIdFromRoute}"
+@using BlazorApp.Services
+@using Entities
+@using DTOs
+@inject IPostService PostService
+@inject NavigationManager Navigation
+
+<h3>DisplaySinglePost</h3>
+
+@if (DisplayedPost is not null)
+{
+    <div class="card mt-4">
+        <div class="card-header">
+            <h4>@DisplayedPost.Title</h4>
+        </div>
+        <div class="card-body">
+            <p>@DisplayedPost.Body</p>
+        </div>
+
+        <div style="margin: 10px">
+            <DisplayCommentsByParentId PostId="@DisplayedPost.PostId"/> 
+        </div>
+
+        <div>
+            <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? PostIdFromRoute { get; set; }
+    public Post? DisplayedPost { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        DisplayedPost = await PostService.GetPostByIdAsync(PostIdFromRoute);
+    }
+
+    private void BackToList()
+    {
+        Navigation.NavigateTo("/Posts");
+    }
+}
