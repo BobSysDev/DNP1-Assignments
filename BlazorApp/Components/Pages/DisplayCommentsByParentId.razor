@@ -59,11 +59,11 @@
                             <Authorized>
                                 | <button @onclick="() => LikeComment(comment.Id)">Like</button> | 
                                 <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | 
-                                <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> | 
+                                <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button>
                                 @if (loggedInUserId == comment.UserId)
                                 {
-                                    <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> 
-                                    <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
+                                    <span> | </span><button @onclick="() => EditCommentBegin(comment.Id)">Edit</button>
+                                    <span> | </span><button @onclick="() => DeleteComment(comment.Id)">Delete</button>
                                 }
                                 
                             </Authorized>
