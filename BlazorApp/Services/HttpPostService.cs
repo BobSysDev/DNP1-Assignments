@@ -1,4 +1,5 @@
 ﻿
+using DTOs;
 using Entities;
 
 namespace BlazorApp.Services;
@@ -12,24 +13,24 @@ public class HttpPostService : IPostService
         _httpClient = httpClient;
     }
 
-    public async Task<Post> GetPostByIdAsync(string postId)
+    public async Task<PostDTO> GetPostByIdAsync(string postId)
     {
-        return await _httpClient.GetFromJsonAsync<Post>($"posts/{postId}");
+        return await _httpClient.GetFromJsonAsync<PostDTO>($"posts/{postId}");
     }
 
-    public async Task<IEnumerable<Post>> GetAllPostsAsync()
+    public async Task<IEnumerable<PostDTO>> GetAllPostsAsync()
     {
-        return await _httpClient.GetFromJsonAsync<IEnumerable<Post>>("posts");
+        return await _httpClient.GetFromJsonAsync<IEnumerable<PostDTO>>("posts");
     }
 
-    public async Task AddPostAsync(Post post)
+    public async Task AddPostAsync(PostDTO postDto)
     {
-        await _httpClient.PostAsJsonAsync("posts", post);
+        await _httpClient.PostAsJsonAsync("posts", postDto);
     }
 
-    public async Task UpdatePostAsync(Post post)
+    public async Task UpdatePostAsync(PostDTO postDto)
     {
-        await _httpClient.PutAsJsonAsync($"posts/{post.PostId}", post);
+        await _httpClient.PutAsJsonAsync($"posts/{postDto.Id}", postDto);
     }
 
     public async Task DeletePostAsync(string postId)

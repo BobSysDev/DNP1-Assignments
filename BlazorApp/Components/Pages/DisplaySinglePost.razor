@@ -5,6 +5,8 @@
 @inject IPostService PostService
 @inject NavigationManager Navigation
 
+
+
 <h3>DisplaySinglePost</h3>
 
 @if (DisplayedPost is not null)
@@ -18,9 +20,13 @@
         </div>
 
         <div style="margin: 10px">
-            <DisplayCommentsByParentId PostId="@DisplayedPost.PostId"/> 
+            <DisplayCommentsByParentId PostId="@DisplayedPost.Id"/> 
         </div>
-
+        
+        <div>
+            <button class="btn btn-secondary" @onclick="GoToEditPost">Edit Post</button>
+        </div>
+        
         <div>
             <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
         </div>
@@ -30,7 +36,7 @@
 @code {
     [Parameter]
     public string? PostIdFromRoute { get; set; }
-    public Post? DisplayedPost { get; set; }
+    public PostDTO? DisplayedPost { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
@@ -38,6 +44,11 @@
     }
 
     private void BackToList()
+    {
+        Navigation.NavigateTo("/Posts");
+    }
+    
+    private void GoToEditPost()
     {
         Navigation.NavigateTo("/Posts");
     }

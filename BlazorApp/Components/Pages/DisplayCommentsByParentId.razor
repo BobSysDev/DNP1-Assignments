@@ -9,16 +9,13 @@
 @rendermode InteractiveServer
 @attribute [Authorize]
 
-@* <h3>DisplayCommentsByParentId - testing</h3> *@
-@* <p>Enter the post ID of the post of which you'd like to view comments of: </p> *@
-@* <InputText @bind-Value="idBox"></InputText> *@
-@* <button @onclick="DisplayComments">Test!</button> *@
 
-<p>
-    <h5>Comments: </h5>
-    <button @onclick="CreateNewCommentUnderPost">Create new</button>
-</p>
-
+<AuthorizeView>
+    <Authorized>
+            <h5>Comments: </h5>
+            <p><button @onclick="CreateNewCommentUnderPost">Create new</button></p>
+    </Authorized>
+</AuthorizeView>
 @if (dtos != null && users != null)
 {
     foreach (var dto in dtos)
