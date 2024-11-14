@@ -13,12 +13,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="WIP">
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="fuck workspace.xml">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Layout/MainLayout.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Layout/MainLayout.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/AddComment.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/AddComment.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,7 +27,7 @@
     <option name="autoShow" value="false" />
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/auth-implementation-posts-sebo-version" />
+    <option name="BRANCH" value="origin/auth-implementation-users" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -52,6 +50,8 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
     <setting file="mock://diff.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
@@ -80,7 +80,7 @@
     ".NET Launch Settings Profile.WebAPI: https.executor": "Run",
     ".NET Project.CLI.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "auth-implementation-comments",
+    "git-widget-placeholder": "auth-implementation",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -257,6 +257,7 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Added authorization and implemented some additional comment functionalities" />
     <MESSAGE value="WIP" />
-    <option name="LAST_COMMIT_MESSAGE" value="WIP" />
+    <MESSAGE value="fuck workspace.xml" />
+    <option name="LAST_COMMIT_MESSAGE" value="fuck workspace.xml" />
   </component>
 </project>
