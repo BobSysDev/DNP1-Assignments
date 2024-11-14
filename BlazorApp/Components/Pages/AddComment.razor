@@ -47,7 +47,6 @@ else
     private async Task AddSingleComment()
     {
         resultDto = await CommentService.CreateCommentAsync(createDto);
-        Console.WriteLine(resultDto.Id);
     }
 }
 

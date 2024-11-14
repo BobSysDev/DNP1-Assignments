@@ -13,10 +13,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="fuck workspace.xml">
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Fixing another Post issue">
+      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditPost.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplaySinglePost.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplaySinglePost.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,7 +33,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="auth-implementation" />
+        <entry key="$PROJECT_DIR$" value="auth-implementation-comments" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -50,12 +51,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://diff.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://diff.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
+    <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/web-forms.rnc" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3a1063f265e44cc8eac674b5bc3df117315653f18a698b6adc9748f68cb10/NavigationManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c439425da351c75ac7d966a1cc8324b51a9c471865af79d2f2f3fcb65e392/HttpClient.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProblemsViewState">
@@ -80,7 +78,7 @@
     &quot;.NET Launch Settings Profile.WebAPI: https.executor&quot;: &quot;Run&quot;,
     &quot;.NET Project.CLI.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;auth-implementation&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;auth-implementation-posts-sebo-version&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -233,7 +231,47 @@
       <option name="project" value="LOCAL" />
       <updated>1731584850873</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="fuck workspace.xml 2">
+      <option name="closed" value="true" />
+      <created>1731589421286</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731589421286</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Id of a user is automatically assigned when you create a comment">
+      <option name="closed" value="true" />
+      <created>1731590655160</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731590655160</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fixed the Post Controller">
+      <option name="closed" value="true" />
+      <created>1731593418412</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731593418412</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Fixed Post service, controller, and whatever was the add method for users...">
+      <option name="closed" value="true" />
+      <created>1731595571995</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731595571995</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fixing another Post issue">
+      <option name="closed" value="true" />
+      <created>1731596657361</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731596657361</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -258,6 +296,10 @@
     <MESSAGE value="Added authorization and implemented some additional comment functionalities" />
     <MESSAGE value="WIP" />
     <MESSAGE value="fuck workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="fuck workspace.xml" />
+    <MESSAGE value="Id of a user is automatically assigned when you create a comment" />
+    <MESSAGE value="Fixed the Post Controller" />
+    <MESSAGE value="Fixed Post service, controller, and whatever was the add method for users..." />
+    <MESSAGE value="Fixing another Post issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing another Post issue" />
   </component>
 </project>
