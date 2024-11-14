@@ -5,88 +5,146 @@
 @using Entities
 @inject IPostService PostService
 @inject NavigationManager Navigation
+@using BlazorApp.Components.Auth
+@inject AuthenticationStateProvider AuthProvider
 
 <div class="container mt-4">
     <h3 class="text-center">Posts</h3>
-    
+
     @if (PostIdFromRoute != null)
     {
         @(selectedPost = getPostDtoById(PostIdFromRoute))
     }
-    @if (isCreating)
-    {
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>Create New Post</h4>
-            </div>
-            <div class="card-body">
-                <EditForm Model="newPost" OnValidSubmit="HandleValidSubmit">
-                    <DataAnnotationsValidator/>
-                    <ValidationSummary/>
-                    <div class="mb-3">
-                        <label class="form-label">Title:</label>
-                        <InputText class="form-control" @bind-Value="newPost.Title"/>
+    <AuthorizeView>
+        <Authorized Context="authContext">
+            @if (isCreating)
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>Create New Post</h4>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Content:</label>
-                        <InputTextArea class="form-control" @bind-Value="newPost.Body"/>
+                    <div class="card-body">
+                        <EditForm Model="newPost" OnValidSubmit="HandleValidSubmit" Context="formContext">
+                            <DataAnnotationsValidator/>
+                            <ValidationSummary/>
+                            <div class="mb-3">
+                                <label class="form-label">Title:</label>
+                                <InputText class="form-control" @bind-Value="newPost.Title"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Content:</label>
+                                <InputTextArea class="form-control" @bind-Value="newPost.Body"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
+                        </EditForm>
                     </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                    <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
-                </EditForm>
-            </div>
-        </div>
-    }
-    else if (selectedPost != null)
-    {
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>@selectedPost.Title</h4>
-            </div>
-            <div class="card-body">
-                <p>@selectedPost.Body</p>
-            </div>
+                </div>
+            }
 
-            <div>
-                <DisplayCommentsByParentId PostId="@selectedPost.PostId"/> 
-            </div>
+            else if (selectedPost != null)
+            {
+                <div>
+                    <text>You're logged in (careful).</text>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>@selectedPost.Title</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>@selectedPost.Body</p>
+                    </div>
 
-            <div>
-                <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
-            </div>
-        </div>
-    }
-    else
-    {
-        <button class="btn btn-primary mt-4" @onclick="ShowCreateForm">Create New Post</button>
-        @if (posts == null)
-        {
-            <p class="mt-4">
-                <em>Loading...</em>
-            </p>
-        }
-        else if (!posts.Any())
-        {
-            <p class="mt-4">No posts available.</p>
-        }
-        else
-        {
-            <ul class="list-group mt-4">
-                @foreach (var post in posts)
+                    <div>
+                        <DisplayCommentsByParentId PostId="@selectedPost.PostId"/>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <button class="btn btn-primary mt-4" @onclick="ShowCreateForm">Create New Post</button>
+                @if (posts == null)
                 {
-                    <li class="list-group-item">
-                        <a href="#" @onclick="() => RedirectToPost(post.PostId)" @onclick:preventDefault="true">@post.Title</a>
-                    </li>
+                    <p class="mt-4">
+                        <em>Loading...</em>
+                    </p>
                 }
-            </ul>
-        }
-    }
+                else if (!posts.Any())
+                {
+                    <p class="mt-4">No posts available.</p>
+                }
+                else
+                {
+                    <ul class="list-group mt-4">
+                        @foreach (var post in posts)
+                        {
+                            <li class="list-group-item">
+                                <a href="#" @onclick="() => RedirectToPost(post.PostId)" @onclick:preventDefault="true">@post.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </Authorized>
+        <NotAuthorized>
+            <div>
+                <text>Log in to create a new post.</text>
+            </div>
+            @if (selectedPost != null)
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h4>@selectedPost.Title</h4>
+                    </div>
+                    <div class="card-body">
+                        <p>@selectedPost.Body</p>
+                    </div>
+
+                    <div>
+                        <DisplayCommentsByParentId PostId="@selectedPost.PostId"/>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @if (posts == null)
+                {
+                    <p class="mt-4">
+                        <em>Loading...</em>
+                    </p>
+                }
+                else if (!posts.Any())
+                {
+                    <p class="mt-4">No posts available.</p>
+                }
+                else
+                {
+                    <ul class="list-group mt-4">
+                        @foreach (var post in posts)
+                        {
+                            <li class="list-group-item">
+                                <a href="#" @onclick="() => RedirectToPost(post.PostId)" @onclick:preventDefault="true">@post.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
 
     [Parameter] public string? PostIdFromRoute { get; set; }
-    
+
     private IEnumerable<Post> posts;
     private Post newPost = new Post();
     private Post selectedPost;
@@ -123,6 +181,7 @@
     private void BackToList()
     {
         selectedPost = null;
+        Navigation.NavigateTo($"/Posts");
     }
 
     private void RedirectToPost(string postId)
@@ -142,4 +201,5 @@
 
         return null;
     }
+
 }
