@@ -47,4 +47,23 @@ public class HttpUserService : IUserService
             PropertyNameCaseInsensitive = true
         })!;
     }
+
+    public async Task<PublicUserDTO> UpdateUser(UserDTO update)
+    {
+        HttpResponseMessage response = await client.PatchAsJsonAsync("/Users/", update);
+        string content = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new Exception(content);
+        }
+        return JsonSerializer.Deserialize<PublicUserDTO>(content, new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        })!;
+    }
+
+    public async Task DeleteUser(int id)
+    {
+        await client.DeleteAsync($"/Users/{id}");
+    }
 }

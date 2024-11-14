@@ -97,7 +97,7 @@ public class UsersController : ControllerBase
                 Id = updated.Id,
                 Username = updated.Username
             };
-            return Accepted($"/Users/{dto.Id}", updated);
+            return Accepted($"/Users/{dto.Id}", dto);
         }
         catch (InvalidDataException e)
         {
@@ -196,26 +196,19 @@ public class UsersController : ControllerBase
         }
     }
 
-    [HttpDelete]public async Task<ActionResult> Delete([FromBody] DeleteUserDTO request)
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> Delete([FromRoute] int userId)
     {
-        if (request.Id == null || request.Id == 0) 
+        if (userId == 0) 
         {
             return BadRequest("ID required.");
         }
-        if(request.Password==null || request.Password.Equals(""))
-        {
-            return BadRequest("Password required.");
-        }
+
 
         try
         {
-            User userToDelete = await userRepo.GetByIdAsync(request.Id);
-            if (userToDelete.Password == request.Password)
-            {
-                userRepo.DeleteAsync(request.Id);
-                return Ok();
-            }
-            return Unauthorized("Wrong password.");
+            userRepo.DeleteAsync(userId);
+            return Ok();
         }
         catch (InvalidDataException e)
         {

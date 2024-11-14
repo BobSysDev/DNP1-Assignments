@@ -1,9 +1,12 @@
 @page "/User"
 @using System.Security.Claims
+@using BlazorApp.Components.Auth
 @using BlazorApp.Services
 @using DTOs
 @attribute [StreamRendering]
 @inject IUserService UserService
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 
@@ -47,7 +50,41 @@
     </NotAuthorized>
 
     <Authorized>
-        <p>You already have an account @context.User.Identity.Name</p>
+        @if (isEditing)
+        {
+            <div class="card-header">
+                <h4>Edit User</h4>
+            </div>
+            <div class="card-body">
+                
+                <EditForm Model="editDto" OnValidSubmit="HandleValidSubmit" Context="formContext">
+
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username:</label>
+                        <InputText class="form-control" type="text" id="username" @bind-Value="editDto.Username" placeholder="Enter new username"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <InputText type="password" id="password" class="form-control" @bind-Value="editDto.Password" placeholder="Enter new password"/>
+                        <p>Warning: type your current password here if you don't want to edit it, as due to implementation limitations, this will always <b>OVERRIDE</b> your current password</p>
+                    </div>
+
+                    <div class="d-flex justify-content-start">
+                        <button type="submit" class="btn btn-outline-primary">Confirm</button>
+                        <button type="button" class="btn btn-outline-secondary" @onclick="CancelEdit">Cancel</button>
+                    </div>
+
+                </EditForm>
+            </div>
+        }
+
+        else
+        {
+            <button class="btn btn-primary mt-4" @onclick="ShowEditingForm">Edit</button>
+            <button class="btn btn-secondary mt-4" @onclick="DeleteUser">Delete</button>
+        }
+
+
     </Authorized>
 
 </AuthorizeView>
@@ -58,24 +95,35 @@
     private string? testResultMessage;
     private string testResultCss = "alert-secondary";
     private List<PublicUserDTO> users = new();
+    
+    private UserDTO editDto { get; set; } = new UserDTO();
+    private bool isEditing = false;
 
     [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private string? loggedInUserName;
+    private int loggedInUserId;
 
 
     protected override async Task OnInitializedAsync()
     {
+        await RefreshAuthCredentials();
+    }
+    
+    private async Task RefreshAuthCredentials()
+    {
+        Console.WriteLine("Refreshing auth creds");
         AuthenticationState authenticationState = await State;
         ClaimsPrincipal claimsPrincipal = authenticationState.User;
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
         {
-            // the user is not logged in 
             return;
         }
-    
-        string? userName = claimsPrincipal.Identity?.Name;
+
         IEnumerable<Claim> claims = claimsPrincipal.Claims;
         string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
-        int userId = int.Parse(userIdAsString);
+        loggedInUserId = int.Parse(userIdAsString);
+        loggedInUserName = claims.Single(c => c.Type == ClaimTypes.Name).Value;
+
     }
 
     private async Task AddUser()
@@ -122,6 +170,35 @@
             testResultMessage = $"Failed to retrieve users. Error: {ex.Message}";
             testResultCss = "alert-danger";
         }
+    }
+
+    
+    
+    private void HandleValidSubmit()
+    {
+        editDto.Id = loggedInUserId;
+        UserService.UpdateUser(editDto);
+        
+        isEditing = false;
+    }
+    
+    private void ShowEditingForm()
+    {
+        isEditing = true;
+        editDto.Username = loggedInUserName;
+        editDto.Id = loggedInUserId;
+    }
+    
+    private void CancelEdit()
+    {
+        isEditing = false;
+    }
+
+    private async Task DeleteUser()
+    {
+        await UserService.DeleteUser(loggedInUserId);
+        await ((SimpleAuthProvider)AuthProvider).Logout();
+        NavigationManager.NavigateTo("/");
     }
 
 }
