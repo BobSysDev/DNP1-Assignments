@@ -1,12 +1,13 @@
-﻿using Entities;
+﻿using DTOs;
+using Entities;
 
 namespace BlazorApp.Services;
 
 public interface IPostService
 {
-    Task<Post> GetPostByIdAsync(string postId);
-    Task<IEnumerable<Post>> GetAllPostsAsync();
-    Task AddPostAsync(Post post);
-    Task UpdatePostAsync(Post post);
+    Task<PostDTO> GetPostByIdAsync(string postId);
+    Task<IEnumerable<PostDTO>> GetAllPostsAsync();
+    Task AddPostAsync(CreatePostDTO postDto);
+    Task<PostDTO> UpdatePostAsync(string postId, CreatePostDTO postDto);
     Task DeletePostAsync(string postId);
 }
