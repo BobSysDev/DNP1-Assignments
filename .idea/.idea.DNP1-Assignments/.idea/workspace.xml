@@ -13,16 +13,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Added authorization and implemented some additional comment functionalities">
-      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/CreateCommentUnderComment.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/CreateCommentUnderPost.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditComment.razor" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/IUserService.cs" afterDir="false" />
-    </list>
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Added authorization and implemented some additional comment functionalities" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -77,7 +68,7 @@
     ".NET Launch Settings Profile.WebAPI: https.executor": "Run",
     ".NET Project.CLI.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "auth-implementation-comments",
+    "git-widget-placeholder": "auth-implementation-users",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -222,7 +213,23 @@
       <option name="project" value="LOCAL" />
       <updated>1731414986528</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added authorization to create user">
+      <option name="closed" value="true" />
+      <created>1731579803466</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1731579803466</updated>
+    </task>
+    <task id="LOCAL-00003" summary="changed &quot;Id&quot; to ClaimTypes.NameIdentifier">
+      <option name="closed" value="true" />
+      <created>1731579880932</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731579880932</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -245,6 +252,8 @@
     <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
     <MESSAGE value="Added authorization and implemented some additional comment functionalities" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added authorization and implemented some additional comment functionalities" />
+    <MESSAGE value="added authorization to create user" />
+    <MESSAGE value="changed &quot;Id&quot; to ClaimTypes.NameIdentifier" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed &quot;Id&quot; to ClaimTypes.NameIdentifier" />
   </component>
 </project>
