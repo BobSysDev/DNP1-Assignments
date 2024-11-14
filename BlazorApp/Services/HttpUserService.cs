@@ -47,4 +47,8 @@ public class HttpUserService : IUserService
             PropertyNameCaseInsensitive = true
         })!;
     }
+    
+    public async Task<PublicUserDTO> UpdateUser(UserDTO update){}
+    
+    public async Task DeleteUser(int id){}
 }

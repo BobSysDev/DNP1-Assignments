@@ -13,9 +13,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="fuck workspace.xml">
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="dupa">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Layout/NavMenu.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -80,7 +79,7 @@
     ".NET Launch Settings Profile.WebAPI: https.executor": "Run",
     ".NET Project.CLI.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "auth-implementation",
+    "git-widget-placeholder": "auth-implementation-users",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -258,6 +257,7 @@
     <MESSAGE value="Added authorization and implemented some additional comment functionalities" />
     <MESSAGE value="WIP" />
     <MESSAGE value="fuck workspace.xml" />
-    <option name="LAST_COMMIT_MESSAGE" value="fuck workspace.xml" />
+    <MESSAGE value="dupa" />
+    <option name="LAST_COMMIT_MESSAGE" value="dupa" />
   </component>
 </project>
