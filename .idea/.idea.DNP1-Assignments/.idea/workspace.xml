@@ -13,12 +13,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Fixed Post service, controller, and whatever was the add method for users...">
+    <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Fixing another Post issue">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpPostService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpPostService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/IPostService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/IPostService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Server/WebAPI/Controllers/PostsController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/WebAPI/Controllers/PostsController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,7 +88,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.BlazorApp: http">
+  <component name="RunManager" selected=".NET Launch Settings Profile.WebAPI: http">
     <configuration name="CLI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
@@ -267,7 +263,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731595571995</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Fixing another Post issue">
+      <option name="closed" value="true" />
+      <created>1731596657361</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731596657361</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,6 +299,7 @@
     <MESSAGE value="Id of a user is automatically assigned when you create a comment" />
     <MESSAGE value="Fixed the Post Controller" />
     <MESSAGE value="Fixed Post service, controller, and whatever was the add method for users..." />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Post service, controller, and whatever was the add method for users..." />
+    <MESSAGE value="Fixing another Post issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixing another Post issue" />
   </component>
 </project>
