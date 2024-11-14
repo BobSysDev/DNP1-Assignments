@@ -47,52 +47,56 @@
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {
-        return
-            @<li>
-                <div class="@comment.Id">
-                    <p>By: @(users.Find(user => user.Id == comment.UserId).Username)</p>
+        return @<li>
+            <div class="@comment.Id">
+                <p>By: @(users.Find(user => user.Id == comment.UserId)?.Username ?? "Unknown")</p>
+                <p>
+                    Likes: @comment.Likes |
+                    <button @onclick="() => LikeComment(comment.Id)">Like</button> |
+                    <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> |
+                    <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> |
+                    <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
+                    <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
+                </p>
+                @if (comment.Id == editedCommentId)
+                {
                     <p>
-                        Likes: @comment.Likes |
-                        <button @onclick="() => LikeComment(comment.Id)">Like</button> |
-                        <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> |
-                        <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> |
-                        <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
-                        <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
+                        <InputText @bind-Value="editedCommentBody"></InputText>
+                        <button @onclick="EditCommentCancel">Cancel</button> |
+                        <button @onclick="EditCommentCommit">Submit</button>
                     </p>
-                    @if (comment.Id == editedCommentId)
-                    {
-                        <p>
-                            <InputText @bind-Value="editedCommentBody"></InputText>
-                            <button @onclick="EditCommentCancel">Cancel</button> |
-                            <button @onclick="EditCommentCommit">Submit</button>
-                        </p>
-                    }
-                    else
-                    {
-                        <p>
-                            <b>@comment.Body</b>
-                        </p>
-                    }
+                }
+                else
+                {
+                    <p>
+                        <b>@comment.Body</b>
+                    </p>
+                }
 
-                    <ul>
-                        @if (comment.Children.Count > 0)
+                <ul>
+                    @if (comment.Children?.Any() == true)
+                    {
+                        foreach (var child in comment.Children)
                         {
-                            foreach (var child in comment.Children)
-                            {
-                                @PrintCommentCascade(child)
-                            }
+                            @PrintCommentCascade(child)
                         }
-                    </ul>
-                </div>
-            </li>;
+                    }
+                </ul>
+            </div>
+        </li>;
     }
+
 
     private async Task DisplayComments()
     {
-        dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
-        users = await UserService.GetAll();
-        StateHasChanged();
+        if (dtos == null || users == null)
+        {
+            dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
+            users = await UserService.GetAll();
+            StateHasChanged();
+        }
     }
+
 
     private async Task LikeComment(string id)
     {
