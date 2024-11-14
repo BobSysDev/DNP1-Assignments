@@ -1,0 +1,94 @@
+@page "/Posts/{PostIdFromRoute}/EditPost"
+@using System.Security.Claims
+@using BlazorApp.Services
+@using Entities
+@using DTOs
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IPostService PostService
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthProvider
+
+@if (loggedInUserName is not null)
+{
+    <h3>Edit Post</h3>
+    <EditForm Model="@createDto" OnValidSubmit="@UpdatePost">
+        <div style="margin-bottom: 10px;">
+            <div>Editing post made by the one and only: @loggedInUserName</div>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <div>Post title: </div>
+            <InputTextArea @bind-Value="createDto.Title"></InputTextArea>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <div>Post body: </div>
+            <InputTextArea @bind-Value="createDto.Body"></InputTextArea>
+        </div>
+        <button class="btn btn-primary" type="submit">Confirm Edit</button>
+        <button class="btn btn-primary" type="button" @onclick="CancelEdit">Cancel</button>
+
+    </EditForm>
+}
+else
+{
+    <p>You must be logged in to edit this post.</p>
+}
+
+@code {
+    [Parameter] public string? PostIdFromRoute { get; set; }
+    private CreatePostDTO createDto { get; set; } = new CreatePostDTO();
+    public PostDTO? DisplayedPost { get; set; }
+
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int loggedInUserId;
+    private string? loggedInUserName;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        DisplayedPost = await PostService.GetPostByIdAsync(PostIdFromRoute);
+        if (DisplayedPost != null)
+        {
+            createDto.Title = DisplayedPost.Title;
+            createDto.Body = DisplayedPost.Body;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshAuthCredentials();
+    }
+
+    private async Task RefreshAuthCredentials()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        loggedInUserId = int.Parse(userIdAsString);
+        loggedInUserName = claims.Single(c => c.Type == ClaimTypes.Name).Value;
+    }
+
+    private async Task UpdatePost()
+    {
+        if (DisplayedPost != null)
+        {
+            createDto.UserId = loggedInUserId;
+            await PostService.UpdatePostAsync(DisplayedPost.Id, createDto);
+
+            Navigation.NavigateTo($"/Posts/{DisplayedPost.Id}");
+        }
+        else
+        {
+            Console.WriteLine("Error: Post not found for updating.");
+        }
+    }
+    private void CancelEdit()
+    {
+        Navigation.NavigateTo($"/Posts/{PostIdFromRoute}");
+    }
+
+}

@@ -14,7 +14,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Fixing another Post issue">
+      <change afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/EditPost.razor" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplaySinglePost.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/DisplaySinglePost.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/Posts.razor" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,12 +51,9 @@
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Auth/SimpleAuthProvider.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Electimore/RiderProjects/DNP1-Assignments/BlazorApp/Components/Pages/DisplayCommentsByParentId.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://diff.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
-    <setting file="mock://diff.razor" root0="SKIP_HIGHLIGHTING" root1="FORCE_HIGHLIGHTING" root2="FORCE_HIGHLIGHTING" />
+    <setting file="jar://$APPLICATION_HOME_DIR$/lib/app.jar!/resources/html5-schema/html5/web-forms.rnc" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3a1063f265e44cc8eac674b5bc3df117315653f18a698b6adc9748f68cb10/NavigationManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/c439425da351c75ac7d966a1cc8324b51a9c471865af79d2f2f3fcb65e392/HttpClient.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="false" />
   <component name="ProblemsViewState">
@@ -71,24 +71,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    ".NET Launch Settings Profile.BlazorApp: http.executor": "Run",
-    ".NET Launch Settings Profile.WebAPI: http.executor": "Run",
-    ".NET Launch Settings Profile.WebAPI: https.executor": "Run",
-    ".NET Project.CLI.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "auth-implementation-posts-sebo-version",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Launch Settings Profile.BlazorApp: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.WebAPI: http.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Launch Settings Profile.WebAPI: https.executor&quot;: &quot;Run&quot;,
+    &quot;.NET Project.CLI.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;auth-implementation-posts-sebo-version&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.Mappings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.WebAPI: http">
+}</component>
+  <component name="RunManager" selected=".NET Launch Settings Profile.BlazorApp: http">
     <configuration name="CLI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
