@@ -98,7 +98,6 @@
     protected override async Task OnInitializedAsync()
     {
         var authState = await AuthProvider.GetAuthenticationStateAsync();
-        Console.WriteLine("Loading posts...");
         posts = await PostService.GetAllPostsAsync();
     }
 

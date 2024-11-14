@@ -20,7 +20,6 @@
                 <NotAuthorized>
                     @if (!NavigationManager.Uri.Contains("Login"))
                     {
-                        Console.WriteLine(NavigationManager.Uri);
                         <button @onclick="Login">Log in</button>
                     }
                 </NotAuthorized>
@@ -51,7 +50,6 @@
 
     private async Task RefreshAuthCredentials()
     {
-        Console.WriteLine("Refreshing auth creds");
         AuthenticationState authenticationState = await State;
         ClaimsPrincipal claimsPrincipal = authenticationState.User;
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
