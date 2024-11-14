@@ -1,9 +1,12 @@
 @page "/User"
 @using System.Security.Claims
+@using BlazorApp.Components.Auth
 @using BlazorApp.Services
 @using DTOs
 @attribute [StreamRendering]
 @inject IUserService UserService
+@inject AuthenticationStateProvider AuthProvider
+@inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 
@@ -47,14 +50,11 @@
     </NotAuthorized>
 
     <Authorized>
-        
-        <div class="card-header">
-            <h4>Edit User</h4>
-        </div>
-        
-        
         @if (isEditing)
         {
+            <div class="card-header">
+                <h4>Edit User</h4>
+            </div>
             <div class="card-body">
                 
                 <EditForm Model="editDto" OnValidSubmit="HandleValidSubmit" Context="formContext">
@@ -66,6 +66,7 @@
                     <div class="mb-3">
                         <label for="password" class="form-label">Password:</label>
                         <InputText type="password" id="password" class="form-control" @bind-Value="editDto.Password" placeholder="Enter new password"/>
+                        <p>Warning: type your current password here if you don't want to edit it, as due to implementation limitations, this will always <b>OVERRIDE</b> your current password</p>
                     </div>
 
                     <div class="d-flex justify-content-start">
@@ -79,7 +80,8 @@
 
         else
         {
-        <button class="btn btn-primary mt-4" @onclick="ShowEditingForm">Edit</button>
+            <button class="btn btn-primary mt-4" @onclick="ShowEditingForm">Edit</button>
+            <button class="btn btn-secondary mt-4" @onclick="DeleteUser">Delete</button>
         }
 
 
@@ -175,7 +177,7 @@
     private void HandleValidSubmit()
     {
         editDto.Id = loggedInUserId;
-        UserService.UpdateUser()
+        UserService.UpdateUser(editDto);
         
         isEditing = false;
     }
@@ -183,11 +185,20 @@
     private void ShowEditingForm()
     {
         isEditing = true;
+        editDto.Username = loggedInUserName;
+        editDto.Id = loggedInUserId;
     }
     
     private void CancelEdit()
     {
         isEditing = false;
+    }
+
+    private async Task DeleteUser()
+    {
+        await UserService.DeleteUser(loggedInUserId);
+        await ((SimpleAuthProvider)AuthProvider).Logout();
+        NavigationManager.NavigateTo("/");
     }
 
 }

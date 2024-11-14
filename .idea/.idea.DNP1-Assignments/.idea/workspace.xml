@@ -15,6 +15,9 @@
   <component name="ChangeListManager">
     <list default="true" id="69d97748-2bec-4f07-be74-1b1d87a80c1b" name="Changes" comment="Fixing another Post issue">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DNP1-Assignments/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Components/Pages/User.razor" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/BlazorApp/Services/HttpUserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Server/WebAPI/Controllers/UsersController.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,7 +28,7 @@
     <option name="autoShow" value="false" />
   </component>
   <component name="Git.Merge.Settings">
-    <option name="BRANCH" value="origin/auth-implementation-users" />
+    <option name="BRANCH" value="auth-implementation-posts-sebo-version" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
@@ -78,17 +81,17 @@
     ".NET Launch Settings Profile.WebAPI: https.executor": "Run",
     ".NET Project.CLI.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "auth-implementation-posts-sebo-version",
+    "git-widget-placeholder": "auth-implementation-users",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "project.propVCSSupport.Mappings",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.grazie",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected=".NET Launch Settings Profile.WebAPI: http">
+  <component name="RunManager" selected=".NET Launch Settings Profile.BlazorApp: http">
     <configuration name="CLI" type="DotNetProject" factoryName=".NET Project">
       <option name="EXE_PATH" value="" />
       <option name="PROGRAM_PARAMETERS" value="" />
