@@ -7,10 +7,15 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<h3>DisplayCommentsByParentId - testing</h3>
-<p>Enter the post ID of the post of which you'd like to view comments of: </p>
-<InputText @bind-Value="idBox"></InputText>
-<button @onclick="DisplayComments">Test!</button>
+@* <h3>DisplayCommentsByParentId - testing</h3> *@
+@* <p>Enter the post ID of the post of which you'd like to view comments of: </p> *@
+@* <InputText @bind-Value="idBox"></InputText> *@
+@* <button @onclick="DisplayComments">Test!</button> *@
+
+<p>
+    <h5>Comments: </h5>
+    <button @onclick="CreateNewCommentUnderPost">Create new</button>
+</p>
 
 @if (dtos != null && users != null)
 {
@@ -24,11 +29,21 @@
 
 
 @code {
+    [Parameter] public string PostId { get; set; }
     private string idBox { get; set; } = "";
     private List<CommentDTO>? dtos { get; set; }
     private List<PublicUserDTO>? users { get; set; }
     private string editedCommentId = "";
     private string editedCommentBody;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrEmpty(PostId))
+        {
+            idBox = PostId;
+            await DisplayComments();
+        }
+    }
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {
@@ -36,10 +51,11 @@
             @<li>
                 <div class="@comment.Id">
                     <p>By: @(users.Find(user => user.Id == comment.UserId).Username)</p>
-                    <p>Likes: @comment.Likes | 
-                        <button @onclick="() => LikeComment(comment.Id)">Like</button> | 
-                        <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> | 
-                        <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> | 
+                    <p>
+                        Likes: @comment.Likes |
+                        <button @onclick="() => LikeComment(comment.Id)">Like</button> |
+                        <button @onclick="() => DislikeComment(comment.Id)">Dislike</button> |
+                        <button @onclick="() => CommentUnderComment(comment.Id)">Comment</button> |
                         <button @onclick="() => EditCommentBegin(comment.Id)">Edit</button> |
                         <button @onclick="() => DeleteComment(comment.Id)">Delete</button>
                     </p>
@@ -47,7 +63,7 @@
                     {
                         <p>
                             <InputText @bind-Value="editedCommentBody"></InputText>
-                            <button @onclick="EditCommentCancel">Cancel</button> | 
+                            <button @onclick="EditCommentCancel">Cancel</button> |
                             <button @onclick="EditCommentCommit">Submit</button>
                         </p>
                     }
@@ -57,7 +73,7 @@
                             <b>@comment.Body</b>
                         </p>
                     }
-                    
+
                     <ul>
                         @if (comment.Children.Count > 0)
                         {
@@ -91,7 +107,7 @@
         await CommentService.DislikeCommentAsync(id);
         StateHasChanged();
     }
-    
+
     private async Task DeleteComment(string id)
     {
         await CommentService.DeleteCommentAsync(id);
@@ -108,9 +124,14 @@
             {
                 return item;
             }
+
             if (item.Children.Count > 0)
             {
-                return FindACommentDtoById(item.Children, id);
+                var found = FindACommentDtoById(item.Children, id);
+                if (found is not null)
+                {
+                    return found;
+                }
             }
         }
 
@@ -118,42 +139,50 @@
     }
 
     private async Task<string> GetUsernameByUserId(int id)
-    {
-        PublicUserDTO dto = await UserService.GetUserById(id);
-        String username = dto.Username;
-        return username;
-    }
-
-    private void EditCommentBegin(string id)
-    {
-        editedCommentId = id;
-        editedCommentBody = FindACommentDtoById(dtos, id).Body;
-        StateHasChanged();
-    }
-
-    private void EditCommentCancel()
-    {
-        editedCommentId = "";
-        StateHasChanged();
-    }
-
-    private async Task EditCommentCommit()
-    {
-        CommentDTO editedComment = FindACommentDtoById(dtos, editedCommentId);
-        var dto = new UpdateCommentDTO
         {
-            Body = editedCommentBody,
-            UserId = editedComment.UserId
-        };
-        Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
-        await CommentService.UpdateCommentAsync(editedCommentId, dto);
-        editedCommentId = "";
-        editedCommentBody = "";
-        await DisplayComments();
+            PublicUserDTO dto = await UserService.GetUserById(id);
+            String username = dto.Username;
+            return username;
+        }
+
+        private void EditCommentBegin(string id)
+        {
+            Console.WriteLine("Editing a comment...");
+            Console.WriteLine(dtos.Count);
+            editedCommentId = id;
+            editedCommentBody = FindACommentDtoById(dtos, id).Body;
+            StateHasChanged();
+        }
+
+        private void EditCommentCancel()
+        {
+            editedCommentId = "";
+            StateHasChanged();
+        }
+
+        private async Task EditCommentCommit()
+        {
+            CommentDTO editedComment = FindACommentDtoById(dtos, editedCommentId);
+            var dto = new UpdateCommentDTO
+            {
+                Body = editedCommentBody,
+                UserId = editedComment.UserId
+            };
+            Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
+            await CommentService.UpdateCommentAsync(editedCommentId, dto);
+            editedCommentId = "";
+            editedCommentBody = "";
+            await DisplayComments();
+        }
+
+        private void CommentUnderComment(string commentId)
+        {
+            NavigationManager.NavigateTo($"/Comment/{commentId}/CreateComment");
+        }
+
+        private void CreateNewCommentUnderPost()
+        {
+            NavigationManager.NavigateTo($"/Posts/{PostId}/CreateComment");
+        }
     }
 
-    private void CommentUnderComment(string commentId)
-    {
-        NavigationManager.NavigateTo($"/Comment/{commentId}/CreateComment");
-    }
-}
