@@ -22,7 +22,11 @@
         <div style="margin: 10px">
             <DisplayCommentsByParentId PostId="@DisplayedPost.PostId"/> 
         </div>
-
+        
+        <div>
+            <button class="btn btn-secondary" @onclick="GoToEditPost">Edit Post</button>
+        </div>
+        
         <div>
             <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
         </div>
@@ -40,6 +44,11 @@
     }
 
     private void BackToList()
+    {
+        Navigation.NavigateTo("/Posts");
+    }
+    
+    private void GoToEditPost()
     {
         Navigation.NavigateTo("/Posts");
     }
