@@ -1,4 +1,5 @@
 ﻿
+using System.Text.Json;
 using DTOs;
 using Entities;
 
@@ -28,9 +29,11 @@ public class HttpPostService : IPostService
         await _httpClient.PostAsJsonAsync("posts", postDto);
     }
 
-    public async Task UpdatePostAsync(PostDTO postDto)
+    public async Task<PostDTO> UpdatePostAsync(string postId, CreatePostDTO postDto)
     {
-        await _httpClient.PutAsJsonAsync($"posts/{postDto.Id}", postDto);
+        HttpResponseMessage response = await _httpClient.PatchAsJsonAsync($"posts/{postId}", postDto);
+        PostDTO responseDTO = JsonSerializer.Deserialize<PostDTO>(await response.Content.ReadAsStringAsync());
+        return responseDTO;
     }
 
     public async Task DeletePostAsync(string postId)

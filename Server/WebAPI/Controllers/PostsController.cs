@@ -34,7 +34,7 @@ public class PostsController
 
         Post createdPost = await _postRepository.AddAsync(newPost);
 
-        return Results.Created($"posts/{createdPost.PostId}", convertToDto(createdPost));
+        return Results.Created($"posts/{createdPost.PostId}", ConvertToDto(createdPost));
     }
 
     [HttpGet("{id}")]
@@ -43,7 +43,7 @@ public class PostsController
         try
         {
             Post post = await _postRepository.GetSingleAsync(id);
-            return Results.Ok(convertToDto(post));
+            return Results.Ok(ConvertToDto(post));
         }
         catch (Exception e)
         {
@@ -70,7 +70,7 @@ public class PostsController
         List<PostDTO> postDtos = new();
         foreach (var post in posts)
         {
-            postDtos.Add(convertToDto(post));
+            postDtos.Add(ConvertToDto(post));
         }
 
         return Results.Ok(postDtos);
@@ -97,7 +97,18 @@ public class PostsController
         return Results.Ok();
     }
 
-    private PostDTO convertToDto(Post post)
+    [HttpPatch("{id}")]
+    public async Task<IResult> UpdatePost([FromRoute] string id, [FromBody] CreatePostDTO request)
+    {
+        Post postToUpdate = await _postRepository.GetSingleAsync(id);
+        postToUpdate.UserId = request.UserId;
+        postToUpdate.Body = request.Body;
+        postToUpdate.Title = request.Title;
+        await _postRepository.UpdateAsync(postToUpdate);
+        return Results.Ok(ConvertToDto(postToUpdate));
+    }
+
+    private static PostDTO ConvertToDto(Post post)
     {
         return new PostDTO
         {
