@@ -1,18 +1,14 @@
 ﻿@page "/Posts"
-@page "/Posts/{PostIdFromRoute}"
 @using BlazorApp.Services
 @using DTOs
 @using Entities
 @inject IPostService PostService
 @inject NavigationManager Navigation
+@using BlazorApp.Components.Auth
+@inject AuthenticationStateProvider AuthProvider
 
 <div class="container mt-4">
-    <h3 class="text-center">Posts</h3>
-    
-    @if (PostIdFromRoute != null)
-    {
-        @(selectedPost = getPostDtoById(PostIdFromRoute))
-    }
+    <h3 class="text-center">Posts</h3>  
     @if (isCreating)
     {
         <div class="card mt-4">
@@ -27,32 +23,25 @@
                         <label class="form-label">Title:</label>
                         <InputText class="form-control" @bind-Value="newPost.Title"/>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Content:</label>
-                        <InputTextArea class="form-control" @bind-Value="newPost.Body"/>
+                    <div class="card-body">
+                        <EditForm Model="newPost" OnValidSubmit="HandleValidSubmit" Context="formContext">
+                            <DataAnnotationsValidator/>
+                            <ValidationSummary/>
+                            <div class="mb-3">
+                                <label class="form-label">Title:</label>
+                                <InputText class="form-control" @bind-Value="newPost.Title"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Content:</label>
+                                <InputTextArea class="form-control" @bind-Value="newPost.Body"/>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
+                        </EditForm>
                     </div>
                     <button type="submit" class="btn btn-primary">Create</button>
                     <button type="button" class="btn btn-secondary" @onclick="CancelCreate">Cancel</button>
                 </EditForm>
-            </div>
-        </div>
-    }
-    else if (selectedPost != null)
-    {
-        <div class="card mt-4">
-            <div class="card-header">
-                <h4>@selectedPost.Title</h4>
-            </div>
-            <div class="card-body">
-                <p>@selectedPost.Body</p>
-            </div>
-
-            <div>
-                <DisplayCommentsByParentId PostId="@selectedPost.PostId"/> 
-            </div>
-
-            <div>
-                <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
             </div>
         </div>
     }
@@ -74,19 +63,31 @@
             <ul class="list-group mt-4">
                 @foreach (var post in posts)
                 {
-                    <li class="list-group-item">
-                        <a href="#" @onclick="() => RedirectToPost(post.PostId)" @onclick:preventDefault="true">@post.Title</a>
-                    </li>
+                    <p class="mt-4">
+                        <em>Loading...</em>
+                    </p>
                 }
-            </ul>
-        }
-    }
+                else if (!posts.Any())
+                {
+                    <p class="mt-4">No posts available.</p>
+                }
+                else
+                {
+                    <ul class="list-group mt-4">
+                        @foreach (var post in posts)
+                        {
+                            <li class="list-group-item">
+                                <a href="#" @onclick="() => RedirectToPost(post.PostId)" @onclick:preventDefault="true">@post.Title</a>
+                            </li>
+                        }
+                    </ul>
+                }
+            }
+        </NotAuthorized>
+    </AuthorizeView>
 </div>
 
 @code {
-
-    [Parameter] public string? PostIdFromRoute { get; set; }
-    
     private IEnumerable<Post> posts;
     private Post newPost = new Post();
     private Post selectedPost;
@@ -94,6 +95,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("Loading posts...");
         posts = await PostService.GetAllPostsAsync();
     }
 
@@ -123,6 +125,7 @@
     private void BackToList()
     {
         selectedPost = null;
+        Navigation.NavigateTo($"/Posts");
     }
 
     private void RedirectToPost(string postId)
@@ -142,4 +145,5 @@
 
         return null;
     }
+
 }
