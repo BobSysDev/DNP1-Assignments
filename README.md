@@ -1,5 +1,5 @@
 # This is the assignment for DNP1 done by SEP3Y Group 1 
-*Currently updated to: Assignment 4*
+*Currently updated to: Assignment 6*
 ### Group members:
 - Aleksander Gwóźdź (343331)
 - Karolina Krysiak (342906)
