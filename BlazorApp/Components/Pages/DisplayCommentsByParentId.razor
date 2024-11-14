@@ -111,7 +111,6 @@
 
     private async Task RefreshAuthCredentials()
     {
-        Console.WriteLine("Refreshing auth creds");
         AuthenticationState authenticationState = await State;
         ClaimsPrincipal claimsPrincipal = authenticationState.User;
         if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
@@ -196,7 +195,6 @@
             Body = editedCommentBody,
             UserId = editedComment.UserId
         };
-        Console.WriteLine($"Editing comment {editedCommentId}. New body: " + editedCommentBody);
         await CommentService.UpdateCommentAsync(editedCommentId, dto);
         editedCommentId = "";
         editedCommentBody = "";
