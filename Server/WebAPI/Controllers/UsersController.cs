@@ -21,14 +21,13 @@ public class UsersController : ControllerBase
     {
         try
         {
-            List<User> users = await userRepo.GetAllAsync();
-            List<PublicUserDTO> dtos = users.Select(u => new PublicUserDTO
+            var addedUser = await userRepo.AddAsync(new User(request.Username, request.Password, -1));
+            var addedUserDto = new PublicUserDTO
             {
-                Id = u.Id,
-                Username = u.Username
-            }).ToList();
-
-            return Ok(dtos); // Returning OK with dtos
+                Id = addedUser.Id,
+                Username = addedUser.Username
+            };
+            return Ok(addedUserDto);
         }
         catch (Exception e)
         {

@@ -1,9 +1,13 @@
 ﻿@page "/Posts/{PostIdFromRoute}"
+@using System.Security.Claims
 @using BlazorApp.Services
 @using Entities
 @using DTOs
 @inject IPostService PostService
 @inject NavigationManager Navigation
+
+@inject AuthenticationStateProvider AuthProvider
+
 
 <h3>DisplaySinglePost</h3>
 
@@ -18,19 +22,34 @@
         </div>
 
         <div style="margin: 10px">
-            <DisplayCommentsByParentId PostId="@DisplayedPost.PostId"/> 
+            <DisplayCommentsByParentId PostId="@DisplayedPost.Id"/>
         </div>
-
-        <div>
+        <div style="margin: 10px">
+        <AuthorizeView>
+            <Authorized Context="authContext">
+                @if (loggedInUserId == DisplayedPost.UserId)
+                {
+                    
+                        <button class="btn btn-secondary" @onclick="GoToEditPost">Edit Post</button>
+                        <span>|</span>
+                        <button class="btn btn-secondary" @onclick="GoToDeletePost">Delete Post</button>
+                        <span>|</span>
+                }
+            </Authorized>
+        </AuthorizeView>
+        
             <button class="btn btn-secondary" @onclick="BackToList">Back to List</button>
         </div>
     </div>
-}
+
 
 @code {
-    [Parameter]
-    public string? PostIdFromRoute { get; set; }
-    public Post? DisplayedPost { get; set; }
+    [Parameter] public string? PostIdFromRoute { get; set; }
+    public PostDTO? DisplayedPost { get; set; }
+
+    [CascadingParameter] public Task<AuthenticationState> State { get; set; }
+    private int loggedInUserId;
+    private string? loggedInUserName;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -41,4 +60,50 @@
     {
         Navigation.NavigateTo("/Posts");
     }
+
+    private void GoToEditPost()
+    {
+        Console.WriteLine(loggedInUserId + " / " + DisplayedPost.UserId);
+        if (loggedInUserId == DisplayedPost.UserId)
+        {
+            Navigation.NavigateTo($"/Posts/{PostIdFromRoute}/EditPost");
+        }
+        else
+        {
+            Console.WriteLine("You do not have permission to edit this post.");
+        }
+    }
+    private async Task GoToDeletePost()
+    {
+        Console.WriteLine(loggedInUserId + " / " + DisplayedPost.UserId);
+        if (loggedInUserId == DisplayedPost.UserId)
+        {
+            PostService.DeletePostAsync(DisplayedPost.Id);
+            Navigation.NavigateTo($"/Posts/");
+            Console.WriteLine("Post deleted suCCessfully.");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshAuthCredentials();
+    }
+
+    private async Task RefreshAuthCredentials()
+    {
+        AuthenticationState authenticationState = await State;
+        ClaimsPrincipal claimsPrincipal = authenticationState.User;
+        if (claimsPrincipal.Identity is null || !claimsPrincipal.Identity.IsAuthenticated)
+        {
+            return;
+        }
+
+        IEnumerable<Claim> claims = claimsPrincipal.Claims;
+        string userIdAsString = claims.Single(c => c.Type == ClaimTypes.NameIdentifier).Value;
+        loggedInUserId = int.Parse(userIdAsString);
+        loggedInUserName = claims.Single(c => c.Type == ClaimTypes.Name).Value;
+    }
+
+}
+
 }
