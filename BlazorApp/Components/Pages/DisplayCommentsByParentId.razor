@@ -46,16 +46,14 @@
         {
             idBox = PostId;
             await DisplayComments();
-            Console.WriteLine("Debug - after displaying comments on load");
         }
     }
 
     private RenderFragment PrintCommentCascade(CommentDTO comment)
     {
-        return
-            @<li>
-                <div class="@comment.Id">
-                    <p>By: @(users.Find(user => user.Id == comment.UserId).Username)</p>
+        return @<li>
+            <div class="@comment.Id">
+                <p>By: @(users.Find(user => user.Id == comment.UserId)?.Username ?? "Unknown")</p>
                     <p>Likes: @comment.Likes 
                         <AuthorizeView>
                             <Authorized>
@@ -90,28 +88,28 @@
                         </p>
                     }
 
-                    <ul>
-                        @if (comment.Children.Count > 0)
+                <ul>
+                    @if (comment.Children?.Any() == true)
+                    {
+                        foreach (var child in comment.Children)
                         {
-                            foreach (var child in comment.Children)
-                            {
-                                @PrintCommentCascade(child)
-                            }
+                            @PrintCommentCascade(child)
                         }
-                    </ul>
-                </div>
-            </li>;
+                    }
+                </ul>
+            </div>
+        </li>;
     }
 
     private async Task DisplayComments()
     {
-        Console.WriteLine("Displaying comments");
-        await RefreshAuthCredentials();
-        dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
-        Console.WriteLine($"comments lodaded: {dtos.Count}");
-        users = await UserService.GetAll();
-        Console.WriteLine($"users lodaded: {users.Count}");
-        StateHasChanged();
+        if (dtos == null || users == null)
+        {
+            await RefreshAuthCredentials();
+            dtos = await CommentService.GetCommentsByPostIdAsync(idBox);
+            users = await UserService.GetAll();
+            StateHasChanged();
+        }
     }
 
     private async Task RefreshAuthCredentials()
@@ -174,11 +172,11 @@
     }
 
     private async Task<string> GetUsernameByUserId(int id)
-    {
-        PublicUserDTO dto = await UserService.GetUserById(id);
-        String username = dto.Username;
-        return username;
-    }
+        {
+            PublicUserDTO dto = await UserService.GetUserById(id);
+            String username = dto.Username;
+            return username;
+        }
 
     private void EditCommentBegin(string id)
     {
