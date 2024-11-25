@@ -10,6 +10,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPostRepository, PostFileRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentFileRepository>();
 builder.Services.AddScoped<IUserRepository, UserFileRepository>();
+// builder.Services.AddScoped<IPostRepository, EfcRepositories.EfcPostRepository>();
+builder.Services.AddDbContext<EfcRepositories.AppContext>();
+
 
 var app = builder.Build();
 

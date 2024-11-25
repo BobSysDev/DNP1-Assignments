@@ -10,6 +10,8 @@ public class Comment
         Body = body;
         Likes = 0;
     }
+    
+    // public Comment(){}
 
     public string Id { get; set; }
     public int UserId { get; set; }
