@@ -1,70 +1,103 @@
-﻿// using Entities;
-// using Microsoft.EntityFrameworkCore;
-// using RepositoryContracts;
-//
-// namespace EfcRepositories;
-//
-// public class EfcPostRepository : IPostRepository
-// {
-//     private readonly AppContext _context;
-//
-//     public EfcPostRepository(AppContext context)
-//     {
-//         _context = context;
-//     }
-//
-//     public async Task<Post> AddAsync(Post post)
-//     {
-//         _context.Posts.Add(post);
-//         await _context.SaveChangesAsync();
-//         return post;
-//     }
-//
-//     public async Task<Post> GetSingleAsync(string id)
-//     {
-//         return await _context.Posts.Include(p => p.User)
-//             .Include(p => p.Comments)
-//             .FirstOrDefaultAsync(p => p.PostId == id);
-//     }
-//
-//     public IQueryable<Post> GetMany()
-//     {
-//         return _context.Posts.Include(p => p.User);
-//     }
-//
-//     public async Task UpdateAsync(Post post)
-//     {
-//         _context.Posts.Update(post);
-//         await _context.SaveChangesAsync();
-//     }
-//
-//     public async Task DeleteAsync(string id)
-//     {
-//         var post = await _context.Posts.FindAsync(id);
-//         if (post != null)
-//         {
-//             _context.Posts.Remove(post);
-//             await _context.SaveChangesAsync();
-//         }
-//     }
-//
-//     public async Task LikePostAsync(string id)
-//     {
-//         var post = await _context.Posts.FindAsync(id);
-//         if (post != null)
-//         {
-//             post.Likes++;
-//             await _context.SaveChangesAsync();
-//         }
-//     }
-//
-//     public async Task RemoveLikePostAsync(string id)
-//     {
-//         var post = await _context.Posts.FindAsync(id);
-//         if (post != null && post.Likes > 0)
-//         {
-//             post.Likes--;
-//             await _context.SaveChangesAsync();
-//         }
-//     }
-// }
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using RepositoryContracts;
+
+namespace EfcRepositories;
+
+public class EfcPostRepository : IPostRepository
+{
+    private readonly AppContext ctx;
+
+    public EfcPostRepository(AppContext context)
+    {
+        ctx = context ?? throw new ArgumentNullException(nameof(context));
+    }
+
+    public async Task<Post> AddAsync(Post post)
+    {
+        if (post == null)
+        {
+            throw new ArgumentNullException(nameof(post));
+        }
+
+        // Ensure UserId exists
+        bool userExists = await ctx.Users.AnyAsync(u => u.Id == post.UserId);
+        if (!userExists)
+        {
+            throw new Exception($"User with ID {post.UserId} does not exist.");
+        }
+        int newPostId = await ctx.Posts.CountAsync() + 1;  
+        post.PostId = newPostId.ToString(); 
+
+        await ctx.Posts.AddAsync(post);
+        await ctx.SaveChangesAsync();
+        return post;
+    }
+
+
+    public async Task UpdateAsync(Post post)
+    {
+        if (!(await ctx.Posts.AnyAsync(p => p.PostId == post.PostId)))
+        {
+            throw new Exception($"Post with id {post.PostId} not found");
+        }
+
+        ctx.Posts.Update(post);
+        await ctx.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(string postId)
+    {
+        Post? existing = await ctx.Posts.SingleOrDefaultAsync(p => p.PostId == postId);
+        if (existing == null)
+        {
+            throw new Exception($"Post with id {postId} not found");
+        }
+
+        ctx.Posts.Remove(existing);
+        await ctx.SaveChangesAsync();
+    }
+
+    public async Task<Post> GetSingleAsync(string postId)
+    {
+        Post? post = await ctx.Posts.SingleOrDefaultAsync(p => p.PostId == postId);
+        if (post == null)
+        {
+            throw new Exception($"Post with id {postId} not found");
+        }
+
+        return post;
+    }
+
+    public IQueryable<Post> GetMany()
+    {
+        return ctx.Posts.AsQueryable();
+    }
+
+    public async Task LikePostAsync(string id)
+    {
+        Post? post = await ctx.Posts.SingleOrDefaultAsync(p => p.PostId == id);
+        if (post == null)
+        {
+            throw new Exception($"Post with id {id} not found");
+        }
+
+        post.Likes++;
+        ctx.Posts.Update(post);
+        await ctx.SaveChangesAsync();
+    }
+
+    public async Task RemoveLikePostAsync(string id)
+    {
+        Post? post = await ctx.Posts.SingleOrDefaultAsync(p => p.PostId == id);
+        if (post == null)
+        {
+            throw new Exception($"Post with id {id} not found");
+        }
+
+        post.Likes--;
+        ctx.Posts.Update(post);
+        await ctx.SaveChangesAsync();
+    }
+}
